@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://osuki9x.github.io/omni-action-releases/sitemap.xml
