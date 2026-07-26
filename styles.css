@@ -1487,11 +1487,11 @@ img {
     step-edge-visibility 1.24s var(--step-edge-delay) linear both;
 }
 
-.step-type:nth-child(2) { --step-edge-delay: 1120ms; }
-.step-type:nth-child(3) { --step-edge-delay: 1320ms; }
-.step-type:nth-child(4) { --step-edge-delay: 1520ms; }
-.step-type:nth-child(5) { --step-edge-delay: 1720ms; }
-.step-type:nth-child(6) { --step-edge-delay: 1920ms; }
+.step-type:nth-child(2) { --step-edge-delay: 1020ms; }
+.step-type:nth-child(3) { --step-edge-delay: 1120ms; }
+.step-type:nth-child(4) { --step-edge-delay: 1220ms; }
+.step-type:nth-child(5) { --step-edge-delay: 1320ms; }
+.step-type:nth-child(6) { --step-edge-delay: 1420ms; }
 
 .step-type:hover {
   border-color: rgba(var(--step-rgb), 0.34);
@@ -2296,10 +2296,11 @@ footer {
 }
 
 @keyframes step-edge-visibility {
-  0% {
+  0%,
+  4% {
     opacity: 0;
   }
-  9% {
+  18% {
     opacity: 1;
   }
   92% {
