@@ -30,11 +30,11 @@
     <script>document.documentElement.classList.add("js");</script>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="assets/product-demo/radial-preview-runtime.css" />
-    <link rel="stylesheet" href="assets/product-demo/product-demo.css?v=7" />
-    <script src="script.js?v=2" defer></script>
+    <link rel="stylesheet" href="assets/product-demo/product-demo.css?v=8" />
+    <script src="script.js?v=3" defer></script>
     <script src="assets/product-demo/product-demo-bridge.js" defer></script>
     <script src="assets/product-demo/radial-preview-runtime.js" defer></script>
-    <script src="assets/product-demo/product-demo.js?v=10" defer></script>
+    <script src="assets/product-demo/product-demo.js?v=11" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -168,8 +168,8 @@
                 >
                   <img
                     class="tour-builder-window"
-                    src="assets/shots/builder-manager.png"
-                    alt="The complete Omni Action Builder window."
+                    src="assets/shots/builder-editor.png"
+                    alt="The Omni Action Builder showing a macro step timeline."
                     width="2400"
                     height="1329"
                     decoding="async"
@@ -193,6 +193,7 @@
                       class="oa-demo-radial oa-demo-radial--arrange"
                       data-radial-demo
                       data-radial-mode="arrange"
+                      data-demo-locked
                       data-compact
                     ></div>
                   </div>
@@ -210,7 +211,12 @@
                   data-tour-panel="run"
                   hidden
                 >
-                  <div class="oa-demo-radial" data-radial-demo data-compact></div>
+                  <div
+                    class="oa-demo-radial"
+                    data-radial-demo
+                    data-radial-mode="tour-run"
+                    data-compact
+                  ></div>
                   <figcaption>
                     <strong>Run without leaving the work.</strong>
                     <span>Hover an item or open a submenu.</span>

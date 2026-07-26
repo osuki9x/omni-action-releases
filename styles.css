@@ -517,7 +517,7 @@ img {
 .tour-viewport {
   position: relative;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: clamp(5px, 1.25vw, 15px);
   background: #030304;
   box-shadow:
     0 32px 74px rgba(0, 0, 0, 0.5),
@@ -535,7 +535,7 @@ img {
 }
 
 .tour-panel.is-active {
-  animation: tour-camera-in 620ms var(--oa-ease-fluid) both;
+  animation: tour-panel-fade 420ms ease both;
 }
 
 .tour-panel > img,
@@ -561,15 +561,24 @@ img {
 
 .tour-radial-crop > .oa-demo-radial {
   position: absolute;
-  top: 10%;
+  top: 28%;
   left: 50%;
-  width: 142%;
+  width: 156%;
   max-width: none;
   transform: translateX(-50%);
 }
 
-.tour-radial-crop .oa-demo-radial__replay {
-  display: none;
+.tour-radial-crop [data-demo-locked] {
+  pointer-events: none;
+  user-select: none;
+}
+
+.tour-panel--run .oa-demo-radial > .radial-preview-stage {
+  transition: opacity 160ms ease;
+}
+
+.tour-panel--run .oa-demo-radial.is-awaiting-open > .radial-preview-stage {
+  opacity: 0;
 }
 
 .tour-panel figcaption {
@@ -595,6 +604,15 @@ img {
   font-size: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tour-panel.is-active figcaption strong,
+.tour-panel.is-active figcaption span {
+  animation: tour-caption-in 440ms 90ms var(--oa-ease-fluid) both;
+}
+
+.tour-panel.is-active figcaption span {
+  animation-delay: 140ms;
 }
 
 .proof-strip {
@@ -884,10 +902,12 @@ img {
 
 .target-visual {
   --target-accent-rgb: 154, 83, 255;
-  --target-crosshair-x: 61%;
-  --target-crosshair-y: 91px;
+  --target-crosshair-x: 50%;
+  --target-crosshair-y: 91.5px;
+  --target-outline-left: 106px;
   --target-outline-top: 72px;
-  --target-outline-right: 34px;
+  --target-outline-width: 220px;
+  --target-outline-height: 39px;
   position: relative;
   min-width: 0;
   min-height: 420px;
@@ -996,9 +1016,9 @@ img {
 .target-outline {
   position: absolute;
   top: var(--target-outline-top);
-  right: var(--target-outline-right);
-  left: 106px;
-  height: 39px;
+  left: var(--target-outline-left);
+  width: var(--target-outline-width);
+  height: var(--target-outline-height);
   border: 1px solid rgba(var(--target-accent-rgb), 0.92);
   border-radius: 10px;
   box-shadow:
@@ -1007,7 +1027,9 @@ img {
   animation: target-lock 3.2s ease-in-out infinite;
   transition:
     top 720ms var(--oa-ease-fluid),
-    right 720ms var(--oa-ease-fluid),
+    left 720ms var(--oa-ease-fluid),
+    width 720ms var(--oa-ease-fluid),
+    height 720ms var(--oa-ease-fluid),
     border-color 260ms ease,
     box-shadow 260ms ease;
 }
@@ -1080,6 +1102,7 @@ img {
 
 .target-picker-bar {
   position: absolute;
+  isolation: isolate;
   right: 24px;
   bottom: 54px;
   left: 24px;
@@ -1095,9 +1118,74 @@ img {
     rgba(8, 9, 13, 0.94);
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.44),
-    0 22px 52px rgba(0, 0, 0, 0.5),
-    0 0 40px -10px rgba(var(--target-accent-rgb), 0.42),
+    0 22px 52px rgba(0, 0, 0, 0.52),
+    0 26px 68px -20px rgba(0, 0, 0, 0.86),
+    0 0 42px -7px rgba(var(--target-accent-rgb), 0.42),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.09);
+  transition:
+    border-color 260ms var(--oa-ease-fluid),
+    box-shadow 260ms var(--oa-ease-fluid);
+}
+
+.target-picker-bar::before,
+.target-picker-bar::after {
+  position: absolute;
+  right: 7%;
+  left: 7%;
+  z-index: -1;
+  height: 22px;
+  pointer-events: none;
+  border-radius: 999px;
+  background-repeat: no-repeat;
+  background-size: 86% 100%, 36% 100%, 82% 1px;
+  content: "";
+  opacity: 0.94;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.target-picker-bar::before {
+  top: -21px;
+  background-image:
+    radial-gradient(ellipse 72% 30px at 50% 100%,
+      rgba(var(--target-accent-rgb), 0.36),
+      rgba(var(--target-accent-rgb), 0.12) 44%,
+      transparent 76%),
+    radial-gradient(ellipse 30% 14px at 50% 100%,
+      rgba(255, 255, 255, 0.075),
+      transparent 82%),
+    linear-gradient(90deg,
+      transparent 0%,
+      rgba(var(--target-accent-rgb), 0.22) 12%,
+      rgba(var(--target-accent-rgb), 0.78) 38%,
+      rgba(255, 255, 255, 0.94) 49.3%,
+      rgba(255, 255, 255, 0.94) 50.7%,
+      rgba(var(--target-accent-rgb), 0.78) 62%,
+      rgba(var(--target-accent-rgb), 0.22) 88%,
+      transparent 100%);
+  background-position: 50% 50%, 50% 50%, 50% 100%;
+}
+
+.target-picker-bar::after {
+  bottom: -21px;
+  background-image:
+    radial-gradient(ellipse 72% 30px at 50% 0%,
+      rgba(var(--target-accent-rgb), 0.34),
+      rgba(var(--target-accent-rgb), 0.11) 44%,
+      transparent 76%),
+    radial-gradient(ellipse 30% 14px at 50% 0%,
+      rgba(255, 255, 255, 0.065),
+      transparent 82%),
+    linear-gradient(90deg,
+      transparent 0%,
+      rgba(var(--target-accent-rgb), 0.2) 12%,
+      rgba(var(--target-accent-rgb), 0.74) 38%,
+      rgba(255, 255, 255, 0.88) 49.3%,
+      rgba(255, 255, 255, 0.88) 50.7%,
+      rgba(var(--target-accent-rgb), 0.74) 62%,
+      rgba(var(--target-accent-rgb), 0.2) 88%,
+      transparent 100%);
+  background-position: 50% 50%, 50% 50%, 50% 0%;
 }
 
 .target-state,
@@ -1225,6 +1313,17 @@ img {
 .target-visual.is-captured .target-outline::after {
   opacity: 1;
   transform: translateY(-50%) scale(1);
+}
+
+.target-visual.is-locked .target-picker-bar,
+.target-visual.is-captured .target-picker-bar {
+  border-color: rgba(var(--target-accent-rgb), 0.28);
+  box-shadow:
+    0 0 0 1px rgba(var(--target-accent-rgb), 0.24),
+    0 22px 54px rgba(0, 0, 0, 0.54),
+    0 26px 68px -20px rgba(0, 0, 0, 0.88),
+    0 0 42px -7px rgba(var(--target-accent-rgb), 0.44),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.1);
 }
 
 .workflow {
@@ -1369,15 +1468,45 @@ img {
   opacity: 0;
 }
 
-.step-type.is-visible::after {
-  animation: step-edge-attention 5.2s 520ms linear infinite;
+.step-type::before {
+  position: absolute;
+  z-index: 2;
+  top: -2px;
+  left: -2px;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 0 5px 1px rgba(var(--step-rgb), 0.78),
+    0 0 11px 2px rgba(var(--step-rgb), 0.28);
+  content: "";
+  offset-anchor: center;
+  offset-distance: 0%;
+  offset-path: border-box;
+  opacity: 0;
+  scale: 0.35;
 }
 
-.step-type:nth-child(2).is-visible::after { animation-delay: 760ms; }
-.step-type:nth-child(3).is-visible::after { animation-delay: 1000ms; }
-.step-type:nth-child(4).is-visible::after { animation-delay: 1240ms; }
-.step-type:nth-child(5).is-visible::after { animation-delay: 1480ms; }
-.step-type:nth-child(6).is-visible::after { animation-delay: 1720ms; }
+.step-type.is-visible::after {
+  animation: step-edge-attention 2.45s 360ms linear both;
+}
+
+.step-type.is-visible::before {
+  animation: step-edge-head 2.45s 360ms linear both;
+}
+
+.step-type:nth-child(2).is-visible::after,
+.step-type:nth-child(2).is-visible::before { animation-delay: 540ms; }
+.step-type:nth-child(3).is-visible::after,
+.step-type:nth-child(3).is-visible::before { animation-delay: 720ms; }
+.step-type:nth-child(4).is-visible::after,
+.step-type:nth-child(4).is-visible::before { animation-delay: 900ms; }
+.step-type:nth-child(5).is-visible::after,
+.step-type:nth-child(5).is-visible::before { animation-delay: 1080ms; }
+.step-type:nth-child(6).is-visible::after,
+.step-type:nth-child(6).is-visible::before { animation-delay: 1260ms; }
 
 .step-type:hover {
   border-color: rgba(var(--step-rgb), 0.34);
@@ -2139,12 +2268,17 @@ footer {
   animation-delay: 240ms;
 }
 
-@keyframes tour-camera-in {
-  0% {
+@keyframes tour-panel-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tour-caption-in {
+  from {
     opacity: 0;
-    transform: scale(1.025);
+    transform: translateY(5px);
   }
-  100% {
+  to {
     opacity: 1;
     transform: none;
   }
@@ -2162,22 +2296,40 @@ footer {
 }
 
 @keyframes step-edge-attention {
-  0%,
-  10% {
+  0% {
     --oa-edge-angle: 0deg;
     opacity: 0;
   }
-  18% {
+  9% {
     opacity: 0.95;
   }
-  58% {
-    --oa-edge-angle: 360deg;
+  86% {
     opacity: 0.95;
   }
-  70%,
   100% {
     --oa-edge-angle: 360deg;
     opacity: 0;
+  }
+}
+
+@keyframes step-edge-head {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+    scale: 0.35;
+  }
+  9% {
+    opacity: 1;
+    scale: 1;
+  }
+  86% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+    scale: 0.16;
   }
 }
 
@@ -2486,8 +2638,7 @@ footer {
     padding-inline: 12px;
   }
 
-  .target-app__content,
-  .target-outline {
+  .target-app__content {
     right: 20px;
     left: 72px;
   }

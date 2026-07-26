@@ -473,9 +473,11 @@
     if (!runtime?.mount) return;
     const compact = root.hasAttribute("data-compact");
     const mode = root.dataset.radialMode || "run";
+    const isTourRun = mode === "tour-run";
     const stage = document.createElement("div");
     const demoPointer = document.createElement("span");
     const replay = document.createElement("button");
+    let arrangeDropHandler = null;
     let liveConfig = createRadialConfig(compact);
     if (mode === "arrange") {
       liveConfig = {
@@ -484,6 +486,20 @@
           ...liveConfig.settings,
           mainSize: 62,
           mainRadius: 118,
+        },
+      };
+    } else if (isTourRun) {
+      liveConfig = {
+        ...liveConfig,
+        settings: {
+          ...liveConfig.settings,
+          animation: {
+            ...liveConfig.settings.animation,
+            openDuration: 0.46,
+            submenuOpenDuration: 0.34,
+            submenuCloseDuration: 0.28,
+            staggerDelay: 0.035,
+          },
         },
       };
     }
@@ -507,8 +523,18 @@
     demoPointer.className = "oa-demo-radial__pointer";
     demoPointer.innerHTML =
       '<svg viewBox="0 0 20 24" aria-hidden="true"><path d="M3.2 2.2v16.9l4.25-4.05 3.15 6.75 3.1-1.45-3.15-6.65h6.1L3.2 2.2z"></path></svg>';
+    if (isTourRun) {
+      stage.addEventListener(
+        "pointerdown",
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        },
+        true,
+      );
+    }
     root.append(stage, demoPointer);
-    if (mode !== "arrange") root.append(replay);
+    if (mode === "run") root.append(replay);
 
     const instance = runtime.mount(
       stage,
@@ -518,17 +544,19 @@
         showGuides: false,
         hasEmptyTempSlot: true,
       },
-      {},
+      {
+        onDrop(payload) {
+          arrangeDropHandler?.(payload);
+        },
+      },
     );
 
     if (mode === "arrange") {
       const baseItems = liveConfig.items.slice();
-      const swaps = [
-        ["main.speed", "main.color"],
-        ["main.speed", "main.color"],
-      ];
+      const swaps = [["main.speed", "main.color"]];
       const arrangeTimers = new Set();
       let arrangeStep = 0;
+      const syntheticPointerID = 91;
 
       function later(callback, delay) {
         const timerID = window.setTimeout(() => {
@@ -544,23 +572,24 @@
       }
 
       function clearArrangeVisuals() {
-        stage.querySelectorAll(".is-demo-drag-source").forEach((slot) => {
-          slot.classList.remove("is-demo-drag-source");
-        });
         demoPointer.classList.remove("is-visible", "is-arrived", "is-dragging");
       }
 
-      function slotCenter(slotID) {
+      function slotPoint(slotID) {
         const slot = stage.querySelector(
           `.radial-preview-slot.main[data-slot-id="${CSS.escape(slotID)}"]`,
         );
         if (!slot) return null;
         const rootRect = root.getBoundingClientRect();
         const slotRect = slot.getBoundingClientRect();
+        const clientX = slotRect.left + slotRect.width / 2;
+        const clientY = slotRect.top + slotRect.height / 2;
         return {
           slot,
-          left: slotRect.left + slotRect.width / 2 - rootRect.left + 10,
-          top: slotRect.top + slotRect.height / 2 - rootRect.top + 8,
+          clientX,
+          clientY,
+          left: clientX - rootRect.left + 10,
+          top: clientY - rootRect.top + 8,
         };
       }
 
@@ -614,19 +643,59 @@
         animateReorderedSlots(before);
       }
 
+      function dispatchDragEvent(target, type, point, buttons) {
+        target.dispatchEvent(
+          new window.PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            pointerId: syntheticPointerID,
+            pointerType: "mouse",
+            isPrimary: true,
+            button: 0,
+            buttons,
+            clientX: point.clientX,
+            clientY: point.clientY,
+          }),
+        );
+      }
+
+      function cancelSyntheticDrag() {
+        document.body.classList.remove("oa-demo-arrange-drag");
+        document.dispatchEvent(
+          new window.PointerEvent("pointercancel", {
+            bubbles: true,
+            cancelable: true,
+            pointerId: syntheticPointerID,
+            pointerType: "mouse",
+            isPrimary: true,
+          }),
+        );
+      }
+
+      function interpolatePoint(source, target, progress) {
+        const clientX = source.clientX + (target.clientX - source.clientX) * progress;
+        const clientY = source.clientY + (target.clientY - source.clientY) * progress;
+        const rootRect = root.getBoundingClientRect();
+        return {
+          clientX,
+          clientY,
+          left: clientX - rootRect.left + 10,
+          top: clientY - rootRect.top + 8,
+        };
+      }
+
+      arrangeDropHandler = ({ slotID, targetSlotID }) => {
+        swapItems(slotID, targetSlotID);
+      };
+
       function scheduleArrangeDemo(delay = 1000) {
         clearArrangeTimers();
-        if (
-          reducedMotion ||
-          !radialDemoInView ||
-          root.matches(":hover") ||
-          root.contains(document.activeElement)
-        ) return;
+        if (reducedMotion || !radialDemoInView) return;
 
         later(() => {
           const [sourceID, targetID] = swaps[arrangeStep % swaps.length];
-          const source = slotCenter(sourceID);
-          const target = slotCenter(targetID);
+          const source = slotPoint(sourceID);
+          const target = slotPoint(targetID);
           if (!source || !target) {
             scheduleArrangeDemo(500);
             return;
@@ -639,41 +708,50 @@
           demoPointer.classList.remove("is-arrived", "is-dragging");
 
           later(() => {
-            if (root.matches(":hover")) return;
-            source.slot.classList.add("is-demo-drag-source");
+            document.body.classList.add("oa-demo-arrange-drag");
+            dispatchDragEvent(source.slot, "pointerdown", source, 1);
             demoPointer.classList.add("is-arrived", "is-dragging");
-            demoPointer.style.left = `${target.left}px`;
-            demoPointer.style.top = `${target.top}px`;
-          }, 620);
+          }, 420);
 
           later(() => {
-            if (root.matches(":hover")) return;
-            swapItems(sourceID, targetID);
+            const point = interpolatePoint(source, target, 0.28);
+            demoPointer.style.left = `${point.left}px`;
+            demoPointer.style.top = `${point.top}px`;
+            dispatchDragEvent(document, "pointermove", point, 1);
+          }, 540);
+
+          later(() => {
+            const point = interpolatePoint(source, target, 0.64);
+            demoPointer.style.left = `${point.left}px`;
+            demoPointer.style.top = `${point.top}px`;
+            dispatchDragEvent(document, "pointermove", point, 1);
+          }, 760);
+
+          later(() => {
+            demoPointer.style.left = `${target.left}px`;
+            demoPointer.style.top = `${target.top}px`;
+            dispatchDragEvent(document, "pointermove", target, 1);
+          }, 1000);
+
+          later(() => {
+            dispatchDragEvent(document, "pointerup", target, 0);
+            document.body.classList.remove("oa-demo-arrange-drag");
             demoPointer.classList.remove("is-dragging");
             demoPointer.classList.add("is-arrived");
             arrangeStep = (arrangeStep + 1) % swaps.length;
-            later(() => scheduleArrangeDemo(0), 1700);
-          }, 1420);
+            later(() => scheduleArrangeDemo(0), 1450);
+          }, 1580);
         }, delay);
       }
 
       function resetArrangeDemo() {
         clearArrangeTimers();
+        cancelSyntheticDrag();
         clearArrangeVisuals();
         arrangeStep = 0;
         liveConfig = { ...liveConfig, items: baseItems.slice() };
         instance.update({ config: liveConfig });
       }
-
-      root.addEventListener("pointerenter", () => {
-        clearArrangeTimers();
-        clearArrangeVisuals();
-      });
-      root.addEventListener("pointerleave", () => scheduleArrangeDemo(850));
-      root.addEventListener("focusin", clearArrangeTimers);
-      root.addEventListener("focusout", () => window.setTimeout(() => {
-        if (!root.contains(document.activeElement)) scheduleArrangeDemo(850);
-      }, 0));
 
       if ("IntersectionObserver" in window && !reducedMotion) {
         const observer = new IntersectionObserver(
@@ -686,6 +764,7 @@
             } else {
               radialDemoInView = false;
               clearArrangeTimers();
+              cancelSyntheticDrag();
               clearArrangeVisuals();
             }
           },
@@ -698,21 +777,21 @@
       return;
     }
 
-    replay.addEventListener("click", () => {
-      instance.replay();
-      radialDemoPhase = 0;
-      replay.blur();
-      scheduleRadialDemo(1200);
-    });
-
-    const radialDemoSequence = [
-      { slotID: "main.speed", hold: 1500 },
-      { slotID: "main.rough-cut", hold: 1800 },
-      { slotID: "sub.subtitle", hold: 1600 },
-      { slotID: "main.color", hold: 1800 },
-      { slotID: "sub.color.asset", hold: 1700 },
-      { slotID: "main.reverb", hold: 1700 },
-    ];
+    let tourRunActive = !isTourRun;
+    let tourRunOpenTimer = 0;
+    const radialDemoSequence = isTourRun
+      ? [
+          { slotID: "main.color", hold: 1900 },
+          { slotID: "sub.color.asset", hold: 2100 },
+        ]
+      : [
+          { slotID: "main.speed", hold: 1500 },
+          { slotID: "main.rough-cut", hold: 1800 },
+          { slotID: "sub.subtitle", hold: 1600 },
+          { slotID: "main.color", hold: 1800 },
+          { slotID: "sub.color.asset", hold: 1700 },
+          { slotID: "main.reverb", hold: 1700 },
+        ];
 
     function clearSyntheticHover() {
       stage.dispatchEvent(new window.MouseEvent("mouseleave"));
@@ -724,6 +803,7 @@
       if (
         reducedMotion ||
         !radialDemoInView ||
+        !tourRunActive ||
         root.matches(":hover") ||
         root.contains(document.activeElement)
       ) return;
@@ -746,7 +826,7 @@
         demoPointer.classList.add("is-visible");
         demoPointer.classList.remove("is-arrived");
         window.setTimeout(() => {
-          if (root.matches(":hover")) return;
+          if (!tourRunActive || !radialDemoInView || root.matches(":hover")) return;
           demoPointer.classList.add("is-arrived");
           stage.dispatchEvent(
             new window.MouseEvent("mousemove", { bubbles: true, clientX, clientY }),
@@ -757,18 +837,62 @@
       }, delay);
     }
 
+    function startTourRun() {
+      if (!isTourRun || reducedMotion || !tourRunActive || !radialDemoInView) return;
+      window.clearTimeout(tourRunOpenTimer);
+      window.clearTimeout(radialDemoTimer);
+      clearSyntheticHover();
+      radialDemoPhase = 0;
+      root.classList.add("is-awaiting-open");
+      tourRunOpenTimer = window.setTimeout(() => {
+        if (!tourRunActive || !radialDemoInView) return;
+        instance.replay();
+        root.classList.remove("is-awaiting-open");
+        scheduleRadialDemo(1180);
+      }, 360);
+    }
+
+    function stopTourRun() {
+      window.clearTimeout(tourRunOpenTimer);
+      window.clearTimeout(radialDemoTimer);
+      clearSyntheticHover();
+      if (isTourRun) root.classList.add("is-awaiting-open");
+    }
+
+    if (mode === "run") {
+      replay.addEventListener("click", () => {
+        instance.replay();
+        radialDemoPhase = 0;
+        replay.blur();
+        scheduleRadialDemo(1200);
+      });
+    }
+
     root.addEventListener("pointerenter", () => {
       window.clearTimeout(radialDemoTimer);
       clearSyntheticHover();
     });
     root.addEventListener("pointerleave", () => {
       radialDemoPhase = 0;
-      scheduleRadialDemo(900);
+      scheduleRadialDemo(isTourRun ? 1050 : 900);
     });
     root.addEventListener("focusin", () => window.clearTimeout(radialDemoTimer));
     root.addEventListener("focusout", () => window.setTimeout(() => {
       if (!root.contains(document.activeElement)) scheduleRadialDemo(900);
     }, 0));
+
+    if (isTourRun) {
+      const tourPanel = root.closest("[data-tour-panel]");
+      root.classList.add("is-awaiting-open");
+      tourPanel?.addEventListener("oa:tour-activate", () => {
+        tourRunActive = true;
+        startTourRun();
+      });
+      tourPanel?.addEventListener("oa:tour-deactivate", () => {
+        tourRunActive = false;
+        stopTourRun();
+      });
+    }
 
     if ("IntersectionObserver" in window && !reducedMotion) {
       const observer = new IntersectionObserver(
@@ -778,13 +902,19 @@
               const wasInView = radialDemoInView;
               radialDemoInView = true;
               if (!wasInView) {
-                instance.replay();
-                scheduleRadialDemo(900);
+                if (isTourRun) startTourRun();
+                else {
+                  instance.replay();
+                  scheduleRadialDemo(900);
+                }
               }
             } else if (!entry.isIntersecting || entry.intersectionRatio < 0.2) {
               radialDemoInView = false;
-              window.clearTimeout(radialDemoTimer);
-              clearSyntheticHover();
+              if (isTourRun) stopTourRun();
+              else {
+                window.clearTimeout(radialDemoTimer);
+                clearSyntheticHover();
+              }
             }
           }
         },
@@ -792,7 +922,8 @@
       );
       observer.observe(root);
     } else {
-      scheduleRadialDemo();
+      if (isTourRun) startTourRun();
+      else scheduleRadialDemo();
     }
   }
 

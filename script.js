@@ -61,9 +61,19 @@ function setupProductTour() {
       panel.hidden = !active;
       panel.classList.toggle("is-active", active);
       panel.setAttribute("aria-hidden", active ? "false" : "true");
+      panel.dispatchEvent(
+        new CustomEvent(active ? "oa:tour-activate" : "oa:tour-deactivate"),
+      );
     });
 
-    if (restart) start();
+    if (restart) {
+      const userIsEngaged =
+        root.matches(":hover") ||
+        (document.activeElement instanceof HTMLElement &&
+          root.contains(document.activeElement));
+      if (userIsEngaged) stop();
+      else start();
+    }
   }
 
   function stop() {
@@ -76,7 +86,7 @@ function setupProductTour() {
   function start() {
     stop();
     if (reducedMotion) return;
-    timer = window.setInterval(() => select(activeIndex + 1, { restart: false }), 5200);
+    timer = window.setInterval(() => select(activeIndex + 1, { restart: false }), 6500);
   }
 
   tabs.forEach((tab, index) => {
@@ -113,6 +123,7 @@ function setupTargetDemo(root) {
   const targetName = root.querySelector("[data-target-name]");
   const instruction = root.querySelector("[data-target-instruction]");
   const coach = root.querySelector("[data-target-coach]");
+  const targetApp = root.querySelector(".target-app");
   const controls = [...root.querySelectorAll("[data-target-key]")];
   const phases = [
     {
@@ -120,10 +131,6 @@ function setupTargetDemo(root) {
       state: "aiming",
       label: "AIMING",
       name: "Inspector · Zoom",
-      top: "72px",
-      right: "calc(34px + 25%)",
-      x: "46%",
-      y: "91px",
       hold: 1450,
     },
     {
@@ -131,10 +138,6 @@ function setupTargetDemo(root) {
       state: "aiming",
       label: "AIMING",
       name: "Inspector · Position",
-      top: "124px",
-      right: "calc(34px + 10%)",
-      x: "68%",
-      y: "143px",
       hold: 1450,
     },
     {
@@ -142,10 +145,6 @@ function setupTargetDemo(root) {
       state: "aiming",
       label: "AIMING",
       name: "Inspector · Opacity",
-      top: "176px",
-      right: "34px",
-      x: "60%",
-      y: "195px",
       hold: 1600,
     },
     {
@@ -153,10 +152,6 @@ function setupTargetDemo(root) {
       state: "locked",
       label: "LOCKED",
       name: "Inspector · Opacity",
-      top: "176px",
-      right: "34px",
-      x: "60%",
-      y: "195px",
       hold: 1150,
     },
     {
@@ -164,10 +159,6 @@ function setupTargetDemo(root) {
       state: "captured",
       label: "CAPTURED",
       name: "Inspector · Opacity",
-      top: "176px",
-      right: "34px",
-      x: "60%",
-      y: "195px",
       hold: 1750,
     },
     {
@@ -175,24 +166,34 @@ function setupTargetDemo(root) {
       state: "aiming",
       label: "AIMING",
       name: "Inspector · Opacity",
-      top: "176px",
-      right: "34px",
-      x: "60%",
-      y: "195px",
       hold: 320,
     },
   ];
   let phaseIndex = 0;
   let timer = 0;
   let inView = !("IntersectionObserver" in window);
+  let currentPhase = phases[0];
+
+  function syncTargetGeometry(control) {
+    if (!control || !targetApp) return;
+    const appRect = targetApp.getBoundingClientRect();
+    const controlRect = control.getBoundingClientRect();
+    const left = controlRect.left - appRect.left;
+    const top = controlRect.top - appRect.top;
+    root.style.setProperty("--target-outline-left", `${left}px`);
+    root.style.setProperty("--target-outline-top", `${top}px`);
+    root.style.setProperty("--target-outline-width", `${controlRect.width}px`);
+    root.style.setProperty("--target-outline-height", `${controlRect.height}px`);
+    root.style.setProperty("--target-crosshair-x", `${left + controlRect.width / 2}px`);
+    root.style.setProperty("--target-crosshair-y", `${top + controlRect.height / 2}px`);
+  }
 
   function applyPhase(phase) {
+    currentPhase = phase;
     root.classList.toggle("is-locked", phase.state === "locked");
     root.classList.toggle("is-captured", phase.state === "captured");
-    root.style.setProperty("--target-outline-top", phase.top);
-    root.style.setProperty("--target-outline-right", phase.right);
-    root.style.setProperty("--target-crosshair-x", phase.x);
-    root.style.setProperty("--target-crosshair-y", phase.y);
+    const activeControl = controls.find((control) => control.dataset.targetKey === phase.key);
+    syncTargetGeometry(activeControl);
     controls.forEach((control) => {
       control.classList.toggle("is-targeted", control.dataset.targetKey === phase.key);
     });
@@ -212,6 +213,15 @@ function setupTargetDemo(root) {
           "Hold <b>⌘</b> or <b>fn</b> to lock the highlighted target, then <b>click</b> to select it.";
       }
     }
+  }
+
+  if ("ResizeObserver" in window && targetApp) {
+    new ResizeObserver(() => {
+      const activeControl = controls.find(
+        (control) => control.dataset.targetKey === currentPhase.key,
+      );
+      syncTargetGeometry(activeControl);
+    }).observe(targetApp);
   }
 
   function stop() {
