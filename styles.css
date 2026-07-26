@@ -559,14 +559,6 @@ img {
   background: rgba(9, 9, 12, 0.98);
 }
 
-.tour-panel figcaption small {
-  grid-row: 1 / 3;
-  color: var(--oa-color-violet-hot);
-  font-size: 8px;
-  font-weight: 780;
-  letter-spacing: 0.11em;
-}
-
 .tour-panel figcaption strong {
   font-size: 12px;
 }
@@ -811,22 +803,6 @@ img {
 
 .feature-panel.is-visible .real-ui-fragment img {
   transform: translateX(-45%);
-}
-
-.fragment-label {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 3;
-  padding: 6px 9px;
-  border: 1px solid var(--oa-stroke-normal);
-  border-radius: 999px;
-  background: rgba(7, 7, 10, 0.88);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.34);
-  color: var(--oa-text-tertiary);
-  font-size: 8px;
-  font-weight: 760;
-  letter-spacing: 0.1em;
 }
 
 .metric-row {
@@ -2392,10 +2368,6 @@ footer {
   .tour-panel figcaption {
     grid-template-columns: 1fr;
     gap: 2px;
-  }
-
-  .tour-panel figcaption small {
-    grid-row: auto;
   }
 
   .tour-panel figcaption span {
