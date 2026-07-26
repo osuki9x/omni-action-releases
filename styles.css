@@ -1418,7 +1418,15 @@ img {
 
 .step-type {
   --step-rgb: 154, 83, 255;
-  --step-edge-delay: 180ms;
+  --step-edge-delay: 920ms;
+  --step-edge-motion-easing: linear(
+    0, 0.0023, 0.0056, 0.0098, 0.0151, 0.0218, 0.0304, 0.0418, 0.0574,
+    0.079, 0.1096, 0.1522, 0.2052, 0.2592, 0.3038, 0.3364, 0.3593,
+    0.3758, 0.3879, 0.397, 0.4042, 0.4099, 0.4189, 0.4358, 0.4533,
+    0.471, 0.4885, 0.5016, 0.5072, 0.5145, 0.5242, 0.5374, 0.5564,
+    0.5847, 0.6278, 0.6881, 0.7542, 0.8075, 0.8436, 0.8674, 0.8836,
+    0.8952, 0.9037, 0.9102, 0.9221, 0.9414, 0.9612, 0.9809, 1
+  );
   --oa-edge-angle: -45.3deg;
   position: relative;
   isolation: isolate;
@@ -1475,15 +1483,15 @@ img {
 
 .step-type.is-visible::after {
   animation:
-    step-edge-motion 1.24s var(--step-edge-delay) linear both,
+    step-edge-motion 1.24s var(--step-edge-delay) var(--step-edge-motion-easing) both,
     step-edge-visibility 1.24s var(--step-edge-delay) linear both;
 }
 
-.step-type:nth-child(2) { --step-edge-delay: 1230ms; }
-.step-type:nth-child(3) { --step-edge-delay: 2280ms; }
-.step-type:nth-child(4) { --step-edge-delay: 3330ms; }
-.step-type:nth-child(5) { --step-edge-delay: 4380ms; }
-.step-type:nth-child(6) { --step-edge-delay: 5430ms; }
+.step-type:nth-child(2) { --step-edge-delay: 1120ms; }
+.step-type:nth-child(3) { --step-edge-delay: 1320ms; }
+.step-type:nth-child(4) { --step-edge-delay: 1520ms; }
+.step-type:nth-child(5) { --step-edge-delay: 1720ms; }
+.step-type:nth-child(6) { --step-edge-delay: 1920ms; }
 
 .step-type:hover {
   border-color: rgba(var(--step-rgb), 0.34);
@@ -2274,61 +2282,15 @@ footer {
 
 /*
  * A conic sweep does not move at a constant visual speed around a rectangle.
- * These stops map evenly spaced perimeter positions to their corresponding
- * angles for the step-card aspect ratio, beginning at the upper-left corner.
- * Their timeline follows p = t^1.25, creating one continuous ease-in across
- * the whole lap without restarting the easing at each geometry correction.
+ * The sampled linear() timing curve maps perimeter distance to conic angle
+ * continuously for the step-card aspect ratio, with a gentle p = t^1.18
+ * acceleration. Keeping only start/end keyframes avoids velocity resets.
  */
 @keyframes step-edge-motion {
-  0% {
+  from {
     --oa-edge-angle: -45.3deg;
   }
-  15.54% {
-    --oa-edge-angle: -31.7deg;
-  }
-  27.06% {
-    --oa-edge-angle: 29deg;
-  }
-  37.43% {
-    --oa-edge-angle: 89.7deg;
-  }
-  47.13% {
-    --oa-edge-angle: 103.3deg;
-  }
-  49.75% {
-    --oa-edge-angle: 111deg;
-  }
-  52.34% {
-    --oa-edge-angle: 119deg;
-  }
-  54.9% {
-    --oa-edge-angle: 127deg;
-  }
-  57.43% {
-    --oa-edge-angle: 134.7deg;
-  }
-  66.24% {
-    --oa-edge-angle: 148.3deg;
-  }
-  74.76% {
-    --oa-edge-angle: 209deg;
-  }
-  83.05% {
-    --oa-edge-angle: 269.7deg;
-  }
-  91.14% {
-    --oa-edge-angle: 283.3deg;
-  }
-  93.37% {
-    --oa-edge-angle: 291deg;
-  }
-  95.59% {
-    --oa-edge-angle: 299deg;
-  }
-  97.8% {
-    --oa-edge-angle: 307deg;
-  }
-  100% {
+  to {
     --oa-edge-angle: 314.7deg;
   }
 }
