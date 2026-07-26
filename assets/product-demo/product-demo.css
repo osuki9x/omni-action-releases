@@ -793,7 +793,7 @@
 .oa-demo-radial[data-compact] {
   width: 100%;
   min-height: 0;
-  aspect-ratio: 2400 / 1329;
+  aspect-ratio: var(--oa-demo-radial-aspect-ratio, 2400 / 1329);
   border: 0;
   border-radius: 0;
   box-shadow: none;
