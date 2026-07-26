@@ -520,9 +520,18 @@ img {
   border-radius: 1.8% / 2.82%;
   background: #030304;
   box-shadow:
-    inset 0 0 0 1px rgb(37, 37, 37),
     0 32px 74px rgba(0, 0, 0, 0.5),
     0 0 64px -34px rgba(140, 31, 255, 0.84);
+}
+
+.tour-viewport::after {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  border: 1px solid rgb(37, 37, 37);
+  border-radius: inherit;
+  content: "";
 }
 
 .tour-panel {
