@@ -1,10 +1,11 @@
 # Omni Action
 
-**Visual automation for the work you repeat in DaVinci Resolve.**
+**Visual automation for the work you repeat.**
 
 Omni Action turns commands, keys, mouse actions, text, timing, and captured
 interface targets into readable visual macros. Trigger them with a shortcut or
-from a customizable radial menu.
+from a customizable radial menu. Version 3.1 includes the current public
+integration for DaVinci Resolve on macOS.
 
 Visit the official homepage for the product tour, installation options, and
 requirements:

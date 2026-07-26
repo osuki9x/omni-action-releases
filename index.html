@@ -7,13 +7,13 @@
     <meta name="application-name" content="Omni Action" />
     <meta
       name="description"
-      content="Omni Action turns repeatable DaVinci Resolve workflows into visual macros you can launch from a radial menu."
+      content="Build repeatable interface workflows as readable macros, then run them from a shortcut or radial menu. Omni Action 3.1 supports DaVinci Resolve on macOS."
     />
     <link rel="canonical" href="https://osuki9x.github.io/omni-action-releases/" />
     <meta property="og:title" content="Omni Action — Build once. Run in a moment." />
     <meta
       property="og:description"
-      content="A visual automation workspace for DaVinci Resolve on macOS."
+      content="A visual automation workspace for macOS. Version 3.1 includes the DaVinci Resolve integration."
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Omni Action" />
@@ -23,10 +23,11 @@
     <meta name="twitter:title" content="Omni Action — Build once. Run in a moment." />
     <meta
       name="twitter:description"
-      content="A visual automation workspace for DaVinci Resolve on macOS."
+      content="Visual automation for macOS. Available now with DaVinci Resolve support."
     />
-    <title>Omni Action — Visual automation for DaVinci Resolve</title>
+    <title>Omni Action — Visual automation for macOS</title>
     <link rel="icon" href="assets/omni-action-mark.svg" type="image/svg+xml" />
+    <script>document.documentElement.classList.add("js");</script>
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
     <script type="application/ld+json">
@@ -36,7 +37,7 @@
         "name": "Omni Action",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "macOS",
-        "description": "A visual automation workspace for repeatable DaVinci Resolve workflows.",
+        "description": "A visual automation workspace for repeatable interface workflows. Version 3.1 includes the DaVinci Resolve integration.",
         "url": "https://osuki9x.github.io/omni-action-releases/",
         "downloadUrl": "https://github.com/osuki9x/omni-action-releases/releases/latest"
       }
@@ -53,8 +54,9 @@
         </a>
 
         <nav class="desktop-nav" aria-label="Main navigation">
-          <a href="#features">Features</a>
+          <a href="#product">Product</a>
           <a href="#workflow">How it works</a>
+          <a href="#integrations">Integrations</a>
           <a href="#install">Install</a>
           <a href="#faq">FAQ</a>
         </nav>
@@ -81,124 +83,157 @@
               <span class="eyebrow-dot"></span>
               <span data-version-label>Omni Action 3.1</span>
               <span class="eyebrow-divider"></span>
-              macOS
+              Visual automation for macOS
             </div>
             <h1>
               Build once.<br />
               <span>Run in a moment.</span>
             </h1>
             <p class="hero-lede">
-              Turn repeatable DaVinci Resolve workflows into visual macros.
-              Launch them from a radial menu, a shortcut, or the Builder—without
-              stitching together scripts by hand.
+              Turn a sequence you repeat into one action. Build it as readable
+              steps, give it a shortcut or a place in the radial menu, then run
+              it without retracing every click.
             </p>
             <div class="hero-actions">
               <a class="button button--primary" href="#install">
                 Install Omni Action
                 <span class="button-icon" aria-hidden="true">↓</span>
               </a>
-              <a class="button button--quiet" href="#workflow">
-                See how it works
+              <a class="button button--quiet" href="#product">
+                Explore the product
                 <span aria-hidden="true">→</span>
               </a>
             </div>
             <div class="hero-notes" aria-label="Product highlights">
-              <span><i class="check">✓</i> Free to install</span>
+              <span><i class="check">✓</i> Available now for DaVinci Resolve</span>
               <span><i class="check">✓</i> Signed updates</span>
               <span><i class="check">✓</i> Your data stays local</span>
             </div>
           </div>
 
-          <div class="hero-product reveal reveal--late" aria-label="Animated Omni Action product demonstration">
-            <div class="product-stage">
-              <div class="stage-dots"></div>
-              <div class="builder-window">
-                <div class="window-topbar">
-                  <div class="traffic">
-                    <i></i><i></i><i></i>
-                  </div>
-                  <div class="window-domain">
-                    <span class="domain-icon"><img src="assets/omni-action-mark.svg" alt="" /></span>
-                    <span>Macro Builder</span>
-                  </div>
-                  <span class="version-chip" data-version-short>v3.1</span>
+          <div class="hero-product reveal reveal--late">
+            <div
+              class="product-tour"
+              data-product-tour
+              aria-label="Omni Action product tour"
+            >
+              <div class="tour-topbar">
+                <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+                <div class="tour-title">
+                  <span class="tour-mark"><img src="assets/omni-action-mark.svg" alt="" /></span>
+                  <span>Omni Action</span>
                 </div>
-                <div class="builder-body">
-                  <aside class="macro-rail">
-                    <span class="rail-label">MACROS</span>
-                    <div class="search-line"><span>⌕</span> Search macros</div>
-                    <div class="macro-row macro-row--active">
-                      <span class="macro-glyph">W</span>
-                      <span>
-                        <strong>Warp Stabilizer</strong>
-                        <small>4 steps</small>
-                      </span>
-                    </div>
-                    <div class="macro-row">
-                      <span class="macro-glyph macro-glyph--orange">50</span>
-                      <span>
-                        <strong>50% Speed</strong>
-                        <small>3 steps</small>
-                      </span>
-                    </div>
-                    <div class="macro-row">
-                      <span class="macro-glyph macro-glyph--blue">A</span>
-                      <span>
-                        <strong>Audio Reverb</strong>
-                        <small>9 steps</small>
-                      </span>
-                    </div>
-                  </aside>
-                  <div class="step-workspace">
-                    <div class="workspace-heading">
-                      <span>
-                        <small>EDITING MACRO</small>
-                        <strong>Warp Stabilizer</strong>
-                      </span>
-                      <span class="phase-pill"><b>1</b> Steps <i></i> <em>2</em> Trigger</span>
-                    </div>
-                    <div class="step-row step-row--one">
-                      <span class="step-index">1</span>
-                      <span class="step-icon">⌘</span>
-                      <span><strong>Open Inspector</strong><small>App command</small></span>
-                      <i class="step-status"></i>
-                    </div>
-                    <div class="step-row step-row--two">
-                      <span class="step-index">2</span>
-                      <span class="step-icon">◎</span>
-                      <span><strong>Find Stabilization</strong><small>Target interface element</small></span>
-                      <i class="step-status"></i>
-                    </div>
-                    <div class="step-row step-row--three">
-                      <span class="step-index">3</span>
-                      <span class="step-icon">↖</span>
-                      <span><strong>Click Stabilize</strong><small>Mouse action</small></span>
-                      <i class="step-status"></i>
-                    </div>
-                    <div class="workspace-footer">
-                      <button tabindex="-1">Cancel</button>
-                      <button class="mini-primary" tabindex="-1">Next · Set Trigger</button>
-                    </div>
-                  </div>
-                </div>
+                <span class="version-chip" data-version-short>v3.1</span>
               </div>
 
-              <div class="radial-demo" aria-hidden="true">
-                <div class="radial-ring"></div>
-                <div class="radial-core">
-                  <img src="assets/omni-action-mark.svg" alt="" />
-                </div>
-                <div class="radial-item radial-item--1"><span>↖</span></div>
-                <div class="radial-item radial-item--2"><span>50</span></div>
-                <div class="radial-item radial-item--3"><span>W</span></div>
-                <div class="radial-item radial-item--4"><span>A</span></div>
-                <div class="radial-item radial-item--5"><span>⌘</span></div>
-                <div class="radial-label">Warp Stabilizer</div>
+              <div class="tour-tabs" role="tablist" aria-label="Product tour views">
+                <button
+                  id="tour-tab-build"
+                  class="tour-tab is-active"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="tour-build"
+                  data-tour-tab="build"
+                >
+                  <span>01</span> Build
+                </button>
+                <button
+                  id="tour-tab-arrange"
+                  class="tour-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="tour-arrange"
+                  data-tour-tab="arrange"
+                >
+                  <span>02</span> Arrange
+                </button>
+                <button
+                  id="tour-tab-run"
+                  class="tour-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="tour-run"
+                  data-tour-tab="run"
+                >
+                  <span>03</span> Run
+                </button>
               </div>
 
-              <div class="demo-cursor" aria-hidden="true">
-                <span class="cursor-pointer">◆</span>
-                <span class="cursor-trail"></span>
+              <div class="tour-viewport">
+                <figure
+                  class="tour-panel is-active"
+                  id="tour-build"
+                  role="tabpanel"
+                  aria-labelledby="tour-tab-build"
+                  data-tour-panel="build"
+                >
+                  <img
+                    src="assets/shots/builder-editor.png"
+                    alt="The real Omni Action Builder showing a nine-step macro."
+                    width="2400"
+                    height="1329"
+                    fetchpriority="high"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    <strong>Build a readable macro.</strong>
+                    <span>Every row is one action you can inspect and change.</span>
+                  </figcaption>
+                </figure>
+
+                <figure
+                  class="tour-panel"
+                  id="tour-arrange"
+                  role="tabpanel"
+                  aria-labelledby="tour-tab-arrange"
+                  data-tour-panel="arrange"
+                  hidden
+                >
+                  <img
+                    src="assets/shots/builder-manager.png"
+                    alt="The real Omni Action Builder showing the macro list and radial menu workspace."
+                    width="2400"
+                    height="1329"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    <strong>Keep actions close.</strong>
+                    <span>Assign a shortcut or place a macro in the radial menu.</span>
+                  </figcaption>
+                </figure>
+
+                <figure
+                  class="tour-panel tour-panel--run"
+                  id="tour-run"
+                  role="tabpanel"
+                  aria-labelledby="tour-tab-run"
+                  data-tour-panel="run"
+                  hidden
+                >
+                  <div class="tour-radial-stage">
+                    <span class="tour-orbit" aria-hidden="true"></span>
+                    <img
+                      src="assets/shots/radial-menu.png"
+                      alt="The real Omni Action radial menu with eight assigned actions."
+                      width="1000"
+                      height="1000"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div class="run-notice" aria-hidden="true">
+                      <i>✓</i>
+                      <span>Macro completed</span>
+                    </div>
+                  </div>
+                  <figcaption>
+                    <strong>Run without leaving the work.</strong>
+                    <span>One trigger replaces the sequence you would repeat by hand.</span>
+                  </figcaption>
+                </figure>
               </div>
             </div>
           </div>
@@ -207,21 +242,21 @@
 
       <section class="proof-strip" aria-label="Omni Action capabilities">
         <div class="shell proof-grid">
-          <div><strong>Visual</strong><span>No-code macro building</span></div>
-          <div><strong>Precise</strong><span>AX-aware Target Picker</span></div>
-          <div><strong>Fast</strong><span>Radial and shortcut triggers</span></div>
-          <div><strong>Safe</strong><span>Signed packages and rollback</span></div>
+          <div><strong>Builder</strong><span>Readable, reorderable steps</span></div>
+          <div><strong>Target Picker</strong><span>Capture interface controls or points</span></div>
+          <div><strong>Radial Menu</strong><span>Actions under the cursor</span></div>
+          <div><strong>Local &amp; signed</strong><span>Local data, verified releases</span></div>
         </div>
       </section>
 
-      <section class="section section-grid" id="features">
+      <section class="section section-grid" id="product">
         <div class="shell">
           <div class="section-heading reveal">
-            <div class="eyebrow"><span class="eyebrow-dot"></span> One workspace, the whole flow</div>
-            <h2>From a repeated task<br />to one confident action.</h2>
+            <div class="eyebrow"><span class="eyebrow-dot"></span> The product</div>
+            <h2>See the workflow.<br />Change the part that matters.</h2>
             <p>
-              Omni Action gives each part of automation a visual home, so you can
-              build, inspect, test, and refine without losing the thread.
+              Omni Action keeps the macro, its trigger, and the interface target
+              in one visual workspace. You can understand an action before you run it.
             </p>
           </div>
 
@@ -229,91 +264,101 @@
             <article class="feature-panel feature-panel--builder reveal">
               <div class="panel-copy">
                 <span class="panel-kicker">01 · BUILDER</span>
-                <h3>Compose the workflow you already know.</h3>
+                <h3>A macro reads like a checklist.</h3>
                 <p>
-                  Add commands, clicks, keys, text, pauses, and repeat logic as
-                  readable steps. Reorder them, test them, or edit the JSON when
-                  you want full control.
+                  Add commands, keys, text, pauses, mouse actions, and captured
+                  controls. Reorder the rows, repeat a step, or test the whole macro.
                 </p>
                 <ul class="feature-list">
-                  <li><span>✓</span> Drag-and-drop step timeline</li>
-                  <li><span>✓</span> Live validation and test runs</li>
-                  <li><span>✓</span> Import and export portable macros</li>
+                  <li><span>✓</span> Drag-and-drop timeline</li>
+                  <li><span>✓</span> Test before saving</li>
+                  <li><span>✓</span> Import and export JSON</li>
                 </ul>
               </div>
-              <div class="timeline-visual" aria-hidden="true">
-                <div class="timeline-toolbar">
-                  <span>Steps</span><b>4</b><i></i><em>Return cursor</em><u></u>
+              <div class="real-ui-frame real-ui-frame--builder">
+                <img
+                  src="assets/shots/builder-editor.png"
+                  alt="A close view of the real Omni Action step timeline."
+                  width="2400"
+                  height="1329"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div class="frame-callout" aria-hidden="true">
+                  <span>6</span>
+                  <b>Input</b>
+                  <small>“Reverb” → captured search field</small>
                 </div>
-                <div class="timeline-card"><b>1</b><i>⌘</i><span><strong>Open Inspector</strong><small>App command</small></span></div>
-                <div class="timeline-link"></div>
-                <div class="timeline-card timeline-card--accent"><b>2</b><i>◎</i><span><strong>Find Stabilization</strong><small>Target interface element</small></span></div>
-                <div class="timeline-link"></div>
-                <div class="timeline-card"><b>3</b><i>↖</i><span><strong>Click Stabilize</strong><small>Mouse action</small></span></div>
-                <div class="timeline-link"></div>
-                <div class="timeline-card"><b>4</b><i>◷</i><span><strong>Wait for result</strong><small>Pause · 0.4 sec</small></span></div>
               </div>
             </article>
 
             <article class="feature-panel feature-panel--radial reveal">
               <div class="panel-copy">
                 <span class="panel-kicker panel-kicker--orange">02 · RADIAL MENU</span>
-                <h3>Your most useful actions, right where you work.</h3>
+                <h3>Useful actions, one gesture away.</h3>
                 <p>
-                  Arrange macros in a fast, contextual menu. Tune its spacing,
-                  color, labels, animation, and per-item appearance—with a
-                  preview that mirrors the live menu.
+                  Arrange macros around the cursor. Labels, icons, spacing,
+                  animation, and per-item styling can be tuned in the same Builder.
                 </p>
                 <div class="metric-row">
-                  <div><strong>1 gesture</strong><span>to open</span></div>
-                  <div><strong>Any item</strong><span>to launch</span></div>
+                  <div><strong>Shortcut</strong><span>to open</span></div>
+                  <div><strong>Direction</strong><span>to choose</span></div>
                 </div>
               </div>
-              <div class="radial-feature-visual" aria-hidden="true">
-                <div class="guide-circle"></div>
-                <div class="rf-center"><img src="assets/omni-action-mark.svg" alt="" /></div>
-                <div class="rf-item rf-item--1"><span>50</span><small>50% Speed</small></div>
-                <div class="rf-item rf-item--2"><span>W</span><small>Stabilize</small></div>
-                <div class="rf-item rf-item--3"><span>A</span><small>Reverb</small></div>
-                <div class="rf-item rf-item--4"><span>⌘</span><small>Commands</small></div>
-                <div class="rf-orbit"></div>
+              <div class="radial-feature-visual">
+                <span class="radial-guide" aria-hidden="true"></span>
+                <img
+                  src="assets/shots/radial-menu.png"
+                  alt="The real Omni Action radial menu."
+                  width="1000"
+                  height="1000"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="radial-pointer" aria-hidden="true"></span>
+                <span class="radial-name" aria-hidden="true">Audio Reverb</span>
               </div>
             </article>
 
             <article class="feature-panel feature-panel--target reveal">
               <div class="panel-copy">
                 <span class="panel-kicker panel-kicker--blue">03 · TARGET PICKER</span>
-                <h3>Point to it. Omni Action remembers it.</h3>
+                <h3>Point to the control you mean.</h3>
                 <p>
-                  Hover over an interface element, lock the target, and capture
-                  it into your step. For precise coordinates, switch to point
-                  capture with an on-screen crosshair.
+                  Aim at an interface element, lock the target, then click to
+                  capture it. Point mode handles places that do not expose a
+                  usable interface element.
                 </p>
                 <div class="target-pills">
                   <span><i></i> Interface element</span>
                   <span><i></i> Screen point</span>
                 </div>
               </div>
-              <div class="target-visual" aria-hidden="true">
-                <div class="fake-app">
-                  <div class="fake-toolbar"></div>
-                  <div class="fake-sidebar">
-                    <i></i><i></i><i></i><i></i>
+              <div class="target-visual" aria-label="Animated Target Picker example">
+                <div class="target-app" aria-hidden="true">
+                  <div class="target-app__bar"></div>
+                  <div class="target-app__rail"><i></i><i></i><i></i><i></i></div>
+                  <div class="target-app__content">
+                    <span></span><span></span>
+                    <div class="target-control">Opacity <b>80</b></div>
+                    <span></span>
                   </div>
-                  <div class="fake-content">
-                    <span></span><span></span><span></span>
-                    <div class="target-outline">
-                      <b>Stabilize</b>
-                    </div>
-                  </div>
+                  <div class="target-outline"></div>
+                  <div class="target-crosshair"><i></i></div>
                 </div>
-                <div class="target-command">
-                  <span class="aim-dot"></span>
-                  <b>AIMING</b>
-                  <i></i>
-                  <span>Inspector · Stabilize</span>
-                  <i></i>
-                  <em>Hold <kbd>⌘</kbd> to lock target</em>
+                <div class="target-picker-bar">
+                  <span class="target-state"><i></i><b>AIMING</b></span>
+                  <span class="target-separator"></span>
+                  <span class="target-identity">
+                    <em>UI</em>
+                    <strong>Inspector · Opacity</strong>
+                  </span>
+                  <span class="target-separator"></span>
+                  <span class="target-instruction">Hold <kbd>⌘</kbd> to lock target</span>
+                </div>
+                <div class="target-coach">
+                  Hold <b>⌘</b> or <b>fn</b> to lock the highlighted target,
+                  then <b>click</b> to select it.
                 </div>
               </div>
             </article>
@@ -326,7 +371,7 @@
           <div class="section-heading section-heading--center reveal">
             <div class="eyebrow"><span class="eyebrow-dot"></span> How it works</div>
             <h2>Build it once.<br />Keep it close.</h2>
-            <p>Three clear steps from an idea to an action you can call anytime.</p>
+            <p>Three decisions turn a repeated sequence into one action.</p>
           </div>
 
           <div class="workflow-grid">
@@ -334,59 +379,90 @@
               <span class="workflow-number">01</span>
               <div class="workflow-icon">≡</div>
               <h3>Build</h3>
-              <p>Turn your workflow into a readable sequence of actions in the visual Builder.</p>
-              <span class="workflow-caption">Commands · Keys · Mouse · Targets</span>
+              <p>Describe the sequence as steps you can read, reorder, and test.</p>
+              <span class="workflow-caption">Commands · Keys · Text · Mouse · Targets</span>
             </article>
             <article class="workflow-card reveal">
               <span class="workflow-number">02</span>
               <div class="workflow-icon">◎</div>
               <h3>Assign</h3>
-              <p>Give it a shortcut, add it to the radial menu, or keep it ready in your macro list.</p>
+              <p>Give the macro a shortcut or a place in the radial menu.</p>
               <span class="workflow-caption">Shortcut · Radial Menu · Builder</span>
             </article>
             <article class="workflow-card reveal">
               <span class="workflow-number">03</span>
               <div class="workflow-icon">▶</div>
               <h3>Run</h3>
-              <p>Launch the full workflow in a moment, with a test overlay that keeps the result clear.</p>
-              <span class="workflow-caption">Test · Run · Refine</span>
+              <p>Trigger the sequence, see the result, and refine only when needed.</p>
+              <span class="workflow-caption">Test · Run · Adjust</span>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="section capabilities">
-        <div class="shell capability-grid">
-          <div class="capability-intro reveal">
-            <span class="panel-kicker">BUILT FOR REAL WORK</span>
-            <h2>Powerful when you need it. Quiet when you don’t.</h2>
+      <section class="section building-blocks">
+        <div class="shell">
+          <div class="section-heading reveal">
+            <div class="eyebrow"><span class="eyebrow-dot"></span> Building blocks</div>
+            <h2>Six step types.<br />Use only what the workflow needs.</h2>
+          </div>
+          <div class="step-type-grid">
+            <article class="step-type step-type--violet reveal">
+              <span>⌘</span><div><h3>App Command</h3><p>Choose a command supplied by the active integration.</p></div>
+            </article>
+            <article class="step-type step-type--green reveal">
+              <span>◉</span><div><h3>Silent Action</h3><p>Press a captured interface control without moving the cursor.</p></div>
+            </article>
+            <article class="step-type step-type--blue reveal">
+              <span>⌨</span><div><h3>Keyboard</h3><p>Send a key or key combination.</p></div>
+            </article>
+            <article class="step-type step-type--amber reveal">
+              <span>◷</span><div><h3>Pause</h3><p>Wait when the interface needs time to catch up.</p></div>
+            </article>
+            <article class="step-type step-type--pink reveal">
+              <span>T</span><div><h3>Input</h3><p>Enter text or a value into a captured field.</p></div>
+            </article>
+            <article class="step-type step-type--teal reveal">
+              <span>↖</span><div><h3>Mouse</h3><p>Move, click, or drag at a control or screen point.</p></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section integrations section-grid" id="integrations">
+        <div class="shell integration-shell">
+          <div class="integration-copy reveal">
+            <span class="panel-kicker">INTEGRATIONS</span>
+            <h2>One Builder.<br />App-aware actions.</h2>
             <p>
-              Omni Action stays close to the work: local configuration, clear
-              feedback, and tools that appear only when they are useful.
+              The Builder, Target Picker, triggers, and radial menu form the
+              shared workspace. An integration adds its own command catalog and
+              app-specific targeting logic.
+            </p>
+            <p class="integration-note">
+              Version 3.1 ships with one public integration. The product is
+              structured to add more without changing how a macro is built.
             </p>
           </div>
-          <div class="capability-cards">
-            <article class="cap-card reveal">
-              <span class="cap-icon">⌁</span>
-              <h3>Presets and portable JSON</h3>
-              <p>Save radial layouts, share macros, and selectively copy visual attributes between presets.</p>
-            </article>
-            <article class="cap-card reveal">
-              <span class="cap-icon">⌘</span>
-              <h3>DaVinci commands</h3>
-              <p>Use Resolve menu commands alongside keys, text, mouse actions, and captured interface targets.</p>
-            </article>
-            <article class="cap-card reveal">
-              <span class="cap-icon">◉</span>
-              <h3>Local-first data</h3>
-              <p>Your macros, triggers, presets, and settings remain on your Mac and survive updates.</p>
-            </article>
-            <article class="cap-card reveal">
-              <span class="cap-icon">✓</span>
-              <h3>Safer updates</h3>
-              <p>Signed feeds, package verification, backups, and rollback protect the working installation.</p>
-            </article>
-          </div>
+
+          <article class="integration-card reveal">
+            <div class="integration-card__top">
+              <span class="integration-symbol">R</span>
+              <span>
+                <small>SUPPORTED TODAY</small>
+                <h3>DaVinci Resolve</h3>
+              </span>
+              <i>Available</i>
+            </div>
+            <ul>
+              <li><span>✓</span> Menu commands and shortcuts</li>
+              <li><span>✓</span> Interface-aware target capture</li>
+              <li><span>✓</span> Built-in macros and radial presets</li>
+            </ul>
+            <div class="integration-card__footer">
+              Current integration in <span data-version-short>v3.1</span>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -395,11 +471,8 @@
         <div class="shell install-shell">
           <div class="section-heading section-heading--center reveal">
             <div class="eyebrow"><span class="eyebrow-dot"></span> Install Omni Action</div>
-            <h2>Choose the path that feels right.</h2>
-            <p>
-              Both options use the same signed installer and preserve your
-              existing Omni Action content when updating.
-            </p>
+            <h2>Use the Shortcut<br />or one Terminal command.</h2>
+            <p>Both open the same signed installer and keep existing Omni Action data.</p>
           </div>
 
           <div class="install-grid">
@@ -412,13 +485,10 @@
                   <h3>Apple Shortcut</h3>
                 </span>
               </div>
-              <p>
-                Download the installer shortcut, open it in Shortcuts, then run
-                it. The guided installer handles the rest.
-              </p>
+              <p>Download the Shortcut, add it to Shortcuts, then run it.</p>
               <ol>
-                <li><span>1</span> Download the Shortcut</li>
-                <li><span>2</span> Add it to Shortcuts</li>
+                <li><span>1</span> Download</li>
+                <li><span>2</span> Add to Shortcuts</li>
                 <li><span>3</span> Run “Omni Action Installer”</li>
               </ol>
               <a
@@ -440,18 +510,24 @@
                 </span>
               </div>
               <p>
-                Prefer one command? Paste this into Terminal. It can install
-                Hammerspoon when needed, then opens the same guided installer.
+                Paste one command. It installs Hammerspoon when needed, then
+                opens the guided installer.
               </p>
               <div class="command-box">
                 <code>/bin/bash -c "$(curl -fsSL https://github.com/osuki9x/omni-action-releases/releases/latest/download/install.sh)"</code>
-                <button class="copy-button" type="button" data-copy-command aria-label="Copy install command">
+                <button
+                  class="copy-button"
+                  type="button"
+                  data-copy-command
+                  aria-label="Copy install command"
+                >
                   <span data-copy-label>Copy</span>
                 </button>
               </div>
               <div class="terminal-note">
                 <span>→</span>
-                You may be asked for your Mac password only if Hammerspoon needs to be installed in Applications.
+                macOS may ask for your password only when Hammerspoon needs to
+                be installed in Applications.
               </div>
             </article>
           </div>
@@ -463,7 +539,7 @@
             </div>
             <div>
               <span class="requirement-icon requirement-icon--violet">H</span>
-              <span><strong>Hammerspoon</strong><small>Installed automatically with Terminal</small></span>
+              <span><strong>Hammerspoon</strong><small>Installed automatically by Terminal</small></span>
             </div>
             <div>
               <span class="requirement-icon requirement-icon--orange">R</span>
@@ -479,17 +555,13 @@
 
       <section class="section trust">
         <div class="shell trust-card reveal">
-          <div class="trust-icon">
-            <div class="shield">✓</div>
-          </div>
+          <div class="trust-icon"><div class="shield">✓</div></div>
           <div class="trust-copy">
-            <span class="panel-kicker panel-kicker--green">DESIGNED FOR A SAFE UPDATE</span>
+            <span class="panel-kicker panel-kicker--green">LOCAL DATA · VERIFIED RELEASES</span>
             <h2>Your work stays yours.</h2>
             <p>
-              The updater verifies signed release information and package
-              hashes before installation. Existing macros, radial menus,
-              presets, triggers, and settings are kept—and the previous app
-              package is backed up for rollback.
+              Macros, triggers, radial menus, presets, and settings stay on your
+              Mac. Updates are signed and verified before the app package is replaced.
             </p>
           </div>
           <a
@@ -507,47 +579,53 @@
         <div class="shell faq-shell">
           <div class="faq-heading reveal">
             <span class="panel-kicker">GOOD TO KNOW</span>
-            <h2>Questions,<br />answered.</h2>
-            <p>Everything you need before your first macro.</p>
+            <h2>Before you install.</h2>
+            <p>Short answers to the questions that affect setup and daily use.</p>
           </div>
           <div class="faq-list">
             <details class="reveal">
-              <summary>What does Omni Action automate?</summary>
+              <summary>What can Omni Action automate today?</summary>
               <p>
-                Version 3.1 focuses on DaVinci Resolve. A macro can combine app
-                commands, keyboard input, mouse actions, text, timing, repeat
-                logic, and captured interface targets into one reusable action.
+                Version 3.1 supports DaVinci Resolve. A macro can combine app
+                commands, keys, text, timing, mouse actions, repeat logic, and
+                captured interface targets.
+              </p>
+            </details>
+            <details class="reveal">
+              <summary>Is Omni Action only for DaVinci Resolve?</summary>
+              <p>
+                DaVinci Resolve is the current public integration, not the limit
+                of the product. Omni Action uses a shared Builder and an
+                integration layer so support for another app can be added later.
               </p>
             </details>
             <details class="reveal">
               <summary>Do I need to write code?</summary>
               <p>
-                No. The Builder is visual and covers the normal workflow.
-                Advanced users can optionally edit or share a macro as JSON.
+                No. Normal setup and editing happen in the visual Builder.
+                Editing or sharing a macro as JSON is optional.
               </p>
             </details>
             <details class="reveal">
-              <summary>Why does Omni Action need Accessibility access?</summary>
+              <summary>Why does it need Accessibility access?</summary>
               <p>
-                macOS requires Accessibility permission before Hammerspoon can
-                inspect and control interface elements. The installer guides
-                you to the correct setting; Omni Action cannot bypass it.
+                macOS requires this permission before Hammerspoon can inspect
+                and control interface elements. The installer opens the correct setting.
               </p>
             </details>
             <details class="reveal">
               <summary>Will an update remove my macros or presets?</summary>
               <p>
-                No. User content and settings live outside the replaceable app
-                package. The installer preserves them and backs up the previous
-                package during an update.
+                No. User content lives outside the replaceable app package.
+                The installer preserves it and backs up the previous package.
               </p>
             </details>
             <details class="reveal">
-              <summary>How do I open the Builder?</summary>
+              <summary>What gets installed?</summary>
               <p>
-                The installer opens it when setup finishes. Afterwards, use the
-                Omni Action Builder shortcut configured by the app, or open it
-                from Hammerspoon.
+                Omni Action runs as a Hammerspoon Spoon. The Terminal method can
+                install Hammerspoon for you; the Shortcut method expects it to
+                be available before setup finishes.
               </p>
             </details>
           </div>
@@ -559,7 +637,7 @@
         <div class="shell final-shell reveal">
           <div class="final-logo"><img src="assets/omni-action-mark.svg" alt="" /></div>
           <h2>Make the next action<br />the easy one.</h2>
-          <p>Build your first Omni Action macro on macOS.</p>
+          <p>Build your first macro with the DaVinci Resolve integration.</p>
           <a class="button button--primary" href="#install">
             Get Omni Action
             <span class="button-icon" aria-hidden="true">↓</span>
