@@ -29,7 +29,12 @@
     <link rel="icon" href="assets/omni-action-mark.svg" type="image/svg+xml" />
     <script>document.documentElement.classList.add("js");</script>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="assets/product-demo/radial-preview-runtime.css" />
+    <link rel="stylesheet" href="assets/product-demo/product-demo.css?v=3" />
     <script src="script.js" defer></script>
+    <script src="assets/product-demo/product-demo-bridge.js" defer></script>
+    <script src="assets/product-demo/radial-preview-runtime.js" defer></script>
+    <script src="assets/product-demo/product-demo.js?v=6" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -161,17 +166,12 @@
                   aria-labelledby="tour-tab-build"
                   data-tour-panel="build"
                 >
-                  <img
-                    src="assets/shots/builder-editor.png"
-                    alt="The real Omni Action Builder showing a nine-step macro."
-                    width="2400"
-                    height="1329"
-                    fetchpriority="high"
-                    decoding="async"
-                  />
+                  <div class="tour-step-stage">
+                    <div class="oa-product-step-demo" data-step-demo data-compact></div>
+                  </div>
                   <figcaption>
                     <strong>Build a readable macro.</strong>
-                    <span>Every row is one action you can inspect and change.</span>
+                    <span>Select a row to inspect its action.</span>
                   </figcaption>
                 </figure>
 
@@ -185,7 +185,7 @@
                 >
                   <img
                     src="assets/shots/builder-manager.png"
-                    alt="The real Omni Action Builder showing the macro list and radial menu workspace."
+                    alt="Omni Action Builder showing the macro list and radial menu workspace."
                     width="2400"
                     height="1329"
                     loading="lazy"
@@ -205,19 +205,10 @@
                   data-tour-panel="run"
                   hidden
                 >
-                  <div class="tour-radial-stage">
-                    <img
-                      src="assets/shots/radial-menu.png"
-                      alt="The real Omni Action radial menu with eight assigned actions."
-                      width="1000"
-                      height="1000"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
+                  <div class="oa-demo-radial" data-radial-demo data-compact></div>
                   <figcaption>
                     <strong>Run without leaving the work.</strong>
-                    <span>One trigger replaces the sequence you would repeat by hand.</span>
+                    <span>Hover an item or open a submenu.</span>
                   </figcaption>
                 </figure>
               </div>
@@ -261,15 +252,12 @@
                   <li><span>✓</span> Import and export JSON</li>
                 </ul>
               </div>
-              <div class="real-ui-fragment real-ui-fragment--builder">
-                <img
-                  src="assets/shots/builder-editor.png"
-                  alt="A close view of the real Omni Action step timeline."
-                  width="2400"
-                  height="1329"
-                  loading="lazy"
-                  decoding="async"
-                />
+              <div class="product-demo-fragment product-demo-fragment--builder">
+                <div class="product-demo-hint">
+                  <span>Try it</span>
+                  Select a row or drag it to a new position
+                </div>
+                <div class="oa-product-step-demo" data-step-demo></div>
               </div>
             </article>
 
@@ -287,14 +275,11 @@
                 </div>
               </div>
               <div class="radial-feature-visual">
-                <img
-                  src="assets/shots/radial-menu.png"
-                  alt="The real Omni Action radial menu."
-                  width="1000"
-                  height="1000"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <div class="product-demo-hint product-demo-hint--orange">
+                  <span>Try it</span>
+                  Hover an item and open a submenu
+                </div>
+                <div class="oa-demo-radial" data-radial-demo></div>
               </div>
             </article>
 

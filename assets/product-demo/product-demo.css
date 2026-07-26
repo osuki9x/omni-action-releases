@@ -1,0 +1,535 @@
+/*
+ * Product demo islands.
+ *
+ * Step geometry mirrors Builder 05_macro_builder.css.
+ * Radial structure is supplied by the vendored production preview renderer;
+ * this file provides only the website shell and required shared tokens.
+ */
+
+:root {
+  --oa-stroke-width-normal: 1px;
+  --oa-stroke-width-strong: 1.5px;
+  --oa-stroke-width-drop-target: 1.5px;
+  --vi-rgb: 140, 31, 255;
+  --or-rgb: 255, 122, 24;
+  --ok-rgb: 52, 199, 89;
+  --bad-rgb: 255, 69, 58;
+  --bad: rgb(var(--bad-rgb));
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.oa-product-step-demo {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 19px;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(140, 31, 255, 0.055), transparent 34%),
+    rgba(5, 5, 7, 0.94);
+  box-shadow:
+    0 28px 58px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.oa-demo-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.oa-demo-step {
+  --step-rgb: 154, 83, 255;
+  position: relative;
+  display: flex;
+  min-height: 58px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 0;
+  border-radius: 13px;
+  background:
+    radial-gradient(42px circle at 45px 29px, rgba(var(--step-rgb), 0.12), transparent 74%),
+    radial-gradient(52px circle at 80px 29px, rgba(var(--step-rgb), 0.086), transparent 76%),
+    linear-gradient(rgba(255, 255, 255, 0.022), rgba(255, 255, 255, 0.008)),
+    rgba(18, 18, 21, 0.91);
+  box-shadow: none;
+  cursor: pointer;
+  transition:
+    background 150ms var(--oa-ease-standard),
+    box-shadow 150ms var(--oa-ease-standard),
+    opacity 150ms ease,
+    transform 220ms var(--oa-ease-fluid);
+}
+
+.oa-demo-step::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(
+      120px circle at var(--oa-demo-pointer-x, -100px) var(--oa-demo-pointer-y, 29px),
+      rgba(var(--step-rgb), 0),
+      transparent 72%
+    );
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.oa-demo-step:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.022),
+    0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.oa-demo-step:hover::after {
+  opacity: 1;
+  background:
+    radial-gradient(
+      120px circle at var(--oa-demo-pointer-x, 72%) var(--oa-demo-pointer-y, 29px),
+      rgba(var(--step-rgb), 0.055),
+      transparent 72%
+    );
+}
+
+.oa-demo-step.is-open {
+  background:
+    linear-gradient(rgba(var(--step-rgb), 0.075), rgba(var(--step-rgb), 0.075)),
+    radial-gradient(42px circle at 45px 29px, rgba(var(--step-rgb), 0), transparent 74%),
+    rgba(18, 18, 21, 0.91);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.02),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.oa-demo-step.is-dragging {
+  opacity: 0.25;
+}
+
+.oa-demo-step.is-entering {
+  animation: oaDemoStepEnter 420ms var(--oa-ease-fluid) both;
+}
+
+.oa-demo-step__head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 88px 8px 6px;
+}
+
+.oa-demo-step__handle {
+  display: flex;
+  width: 18px;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.oa-demo-step__handle::before {
+  width: 12px;
+  height: 16px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.24) 0 1px,
+    transparent 1px 4px
+  );
+  content: "";
+  opacity: 0.58;
+}
+
+.oa-demo-step__index {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(var(--step-rgb), 0.14);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.oa-demo-step__type-icon {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: rgb(var(--step-rgb));
+  filter: drop-shadow(0 0 8px rgba(var(--step-rgb), 0.24));
+}
+
+.oa-demo-step__type-icon img {
+  width: 15px;
+  height: 15px;
+}
+
+.oa-demo-step__copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.oa-demo-step__copy strong {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 12px;
+  font-weight: 720;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oa-demo-step__copy small {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 9px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oa-demo-step__repeat {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border: 1px solid rgba(var(--step-rgb), 0.22);
+  border-radius: 999px;
+  background: rgba(var(--step-rgb), 0.07);
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.oa-demo-step__actions {
+  position: absolute;
+  top: 50%;
+  right: 9px;
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(3px, -50%);
+  transition:
+    opacity 150ms ease,
+    transform 180ms var(--oa-ease-fluid);
+}
+
+.oa-demo-step:hover .oa-demo-step__actions,
+.oa-demo-step.is-open .oa-demo-step__actions,
+.oa-demo-step:focus-within .oa-demo-step__actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -50%);
+}
+
+.oa-demo-step__action {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.42);
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background 140ms ease,
+    transform 140ms var(--oa-ease-fluid);
+}
+
+.oa-demo-step__action:hover {
+  background: rgba(var(--step-rgb), 0.09);
+  color: rgb(var(--step-rgb));
+  transform: translateY(-1px);
+}
+
+.oa-demo-step__action.is-danger:hover {
+  background: rgba(255, 69, 58, 0.09);
+  color: rgb(255, 69, 58);
+}
+
+.oa-demo-step__action svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+}
+
+.oa-demo-step__body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  max-height: 0;
+  grid-template-columns: minmax(0, 1fr) 84px;
+  gap: 18px;
+  align-items: end;
+  overflow: hidden;
+  padding: 0 12px 0 76px;
+  border-top: 0 solid rgba(255, 255, 255, 0.034);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
+  opacity: 0;
+  transition:
+    max-height 280ms var(--oa-ease-fluid),
+    padding 280ms var(--oa-ease-fluid),
+    border-width 280ms ease,
+    opacity 180ms ease;
+}
+
+.oa-demo-step.is-open .oa-demo-step__body {
+  max-height: 92px;
+  padding-top: 10px;
+  padding-bottom: 12px;
+  border-top-width: 1px;
+  opacity: 1;
+}
+
+.oa-demo-step__body > span:first-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.oa-demo-step__body small {
+  color: rgba(255, 255, 255, 0.34);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.oa-demo-step__body strong {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 9px;
+  font-weight: 560;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oa-demo-step__field {
+  width: 100%;
+  height: 28px;
+  border: 1px solid rgba(var(--step-rgb), 0.16);
+  border-radius: 9px;
+  background: rgba(4, 4, 5, 0.54);
+}
+
+.oa-demo-drop-indicator {
+  position: relative;
+  height: 2px;
+  margin: -2px 8px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(140, 31, 255, 0.34) 15%,
+    rgba(210, 164, 255, 0.94) 50%,
+    rgba(140, 31, 255, 0.34) 85%,
+    transparent
+  );
+  filter: drop-shadow(0 0 5px rgba(140, 31, 255, 0.44));
+  animation: oaDemoDropOpen 240ms var(--oa-ease-fluid) both;
+}
+
+.oa-product-step-demo[data-compact] {
+  padding: 9px;
+  border-radius: 14px;
+}
+
+.oa-product-step-demo[data-compact] .oa-demo-step-list {
+  gap: 5px;
+}
+
+.oa-product-step-demo[data-compact] .oa-demo-step {
+  min-height: 46px;
+  border-radius: 10px;
+}
+
+.oa-product-step-demo[data-compact] .oa-demo-step__head {
+  min-height: 46px;
+  padding-right: 12px;
+}
+
+.oa-product-step-demo[data-compact] .oa-demo-step__actions,
+.oa-product-step-demo[data-compact] .oa-demo-step__handle,
+.oa-product-step-demo[data-compact] .oa-demo-step__body {
+  display: none;
+}
+
+.oa-product-step-demo[data-compact] .oa-demo-step__copy strong {
+  font-size: 10px;
+}
+
+.oa-product-step-demo[data-compact] .oa-demo-step__copy small {
+  font-size: 8px;
+}
+
+.oa-demo-radial {
+  position: relative;
+  min-width: 0;
+  min-height: 430px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 122, 24, 0.075), transparent 38%),
+    rgba(3, 3, 4, 0.84);
+  box-shadow:
+    0 28px 58px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.oa-demo-radial::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1px, transparent 1.2px);
+  background-size: 18px 18px;
+  content: "";
+  opacity: 0.21;
+}
+
+.oa-demo-radial > .radial-preview-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.oa-demo-radial__replay {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 12;
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 122, 24, 0.18);
+  border-radius: 999px;
+  background: rgba(8, 8, 10, 0.82);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 700;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 180ms var(--oa-ease-fluid);
+}
+
+.oa-demo-radial__replay:hover {
+  border-color: rgba(255, 122, 24, 0.38);
+  background: rgba(255, 122, 24, 0.075);
+  color: var(--oa-color-orange-hot);
+  transform: translateY(-1px);
+}
+
+.oa-demo-radial__replay svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.4;
+}
+
+.oa-demo-radial[data-compact] {
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 2400 / 1329;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.oa-demo-radial[data-compact] .oa-demo-radial__replay {
+  right: 10px;
+  bottom: 10px;
+}
+
+@keyframes oaDemoStepEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+@keyframes oaDemoDropOpen {
+  from {
+    opacity: 0;
+    transform: scaleX(0.3);
+  }
+}
+
+@media (max-width: 560px) {
+  .oa-product-step-demo {
+    padding: 8px;
+  }
+
+  .oa-demo-step__head {
+    padding-right: 64px;
+  }
+
+  .oa-demo-step__repeat {
+    display: none;
+  }
+
+  .oa-demo-step__actions {
+    right: 6px;
+  }
+
+  .oa-demo-step__action {
+    width: 24px;
+    height: 24px;
+  }
+
+  .oa-demo-step__body {
+    grid-template-columns: 1fr;
+    padding-left: 54px;
+  }
+
+  .oa-demo-step__field {
+    display: none;
+  }
+
+  .oa-demo-radial {
+    min-height: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oa-demo-step,
+  .oa-demo-step__body,
+  .oa-demo-step__actions,
+  .oa-demo-radial__replay {
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,331 @@
+/* ============================================================
+   Runtime-faithful radial preview island.
+
+   Runtime-facing item visuals are driven by inline values emitted by
+   05_radial_preview_runtime.js. These rules provide only structure and
+   Builder v3 editor affordances around that runtime visual contract.
+   ============================================================ */
+
+.oa-rp-runtime {
+  position: relative;
+  inset: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: visible;
+  padding: 0;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.oa-rp-runtime .radial-preview-stage {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: visible;
+  contain: layout style;
+  isolation: isolate;
+}
+
+.oa-rp-runtime .radial-preview-grid,
+.oa-rp-runtime .radial-preview-dynamic,
+.oa-rp-runtime .radial-preview-plus-layer {
+  position: absolute;
+  inset: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.oa-rp-runtime .radial-preview-grid {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.oa-rp-runtime .radial-preview-dynamic {
+  z-index: 2;
+}
+
+.oa-rp-runtime .radial-preview-plus-layer {
+  z-index: 5;
+  pointer-events: none;
+}
+
+.oa-rp-runtime .radial-preview-plus-layer .radial-preview-slot.add {
+  pointer-events: auto;
+}
+
+.oa-rp-runtime .radial-preview-radius-guide {
+  position: absolute;
+  pointer-events: none;
+}
+
+.oa-rp-runtime .radial-preview-radius-guide {
+  border: var(--oa-stroke-width-normal) dashed rgba(var(--or-rgb), 0.30);
+  border-radius: 999px;
+  opacity: 0;
+  box-shadow: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 900ms var(--ease);
+  will-change: opacity;
+}
+
+.oa-rp-runtime .radial-preview-radius-guide.is-visible {
+  opacity: 1;
+}
+
+.oa-rp-runtime .radial-preview-slot {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border-style: solid;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  overflow: visible;
+  text-align: center;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 10px 28px rgba(var(--oa-color-black-0-rgb, 4, 4, 5), 0.26);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    border-width 120ms ease,
+    box-shadow 120ms ease,
+    opacity 120ms ease;
+}
+
+.oa-rp-runtime .radial-preview-slot.main {
+  outline: var(--oa-stroke-width-normal) solid rgba(255, 255, 255, 0.08);
+}
+
+.oa-rp-runtime .radial-preview-slot.close {
+  z-index: 3;
+}
+
+/* Data state only: an empty runtime item can dim, but real item stroke stays solid.
+   Dashed visuals are reserved for editor affordances such as guides, add buttons,
+   drag/drop overlays, and trash dropzones. */
+.oa-rp-runtime .radial-preview-slot.unassigned {
+  opacity: 0.48;
+}
+
+.oa-rp-runtime .radial-preview-slot.selected,
+.oa-rp-runtime .radial-preview-slot.selected.main,
+.oa-rp-runtime .radial-preview-slot.selected.user {
+  outline: var(--oa-stroke-width-strong) solid rgba(var(--vi-rgb), 0.92);
+  outline-offset: 3px;
+}
+
+.oa-rp-runtime .radial-preview-stage.is-assigning .radial-preview-slot:not(.assign-selected) {
+  outline: none;
+}
+
+.oa-rp-runtime .radial-preview-slot.assign-selected {
+  outline: var(--oa-stroke-width-strong) solid rgba(var(--vi-rgb), 0.96);
+  outline-offset: 3px;
+  box-shadow:
+    0 0 24px -4px rgba(var(--vi-rgb), 0.65),
+    0 10px 28px rgba(var(--oa-color-black-0-rgb, 4, 4, 5), 0.26);
+}
+
+.oa-rp-runtime .radial-preview-slot.is-drop-target,
+.oa-rp-runtime .radial-preview-slot.is-drop-replace {
+  outline: var(--oa-stroke-width-drop-target) solid rgba(var(--ok-rgb), 0.96);
+  outline-offset: 3px;
+  box-shadow:
+    0 0 24px -4px rgba(var(--ok-rgb), 0.62),
+    0 10px 28px rgba(var(--oa-color-black-0-rgb, 4, 4, 5), 0.26);
+}
+
+.oa-rp-runtime .radial-preview-slot.is-drop-replace {
+  outline-color: rgba(var(--or-rgb), 0.96);
+  box-shadow:
+    0 0 24px -4px rgba(var(--or-rgb), 0.62),
+    0 10px 28px rgba(var(--oa-color-black-0-rgb, 4, 4, 5), 0.26);
+}
+
+.oa-rp-runtime .radial-preview-slot.drag-source {
+  opacity: 0.34;
+}
+
+.radial-preview-drag-active .oa-rp-runtime .radial-preview-stage[data-radial-preview-stage]
+  .radial-preview-slot[data-slot-id]:not(.close):not(.add):not(.drag-source)::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: var(--oa-stroke-width-drop-target) dashed rgba(var(--vi-rgb), 0.66);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.radial-preview-drag-active .oa-rp-runtime .radial-preview-stage[data-radial-preview-stage]
+  .radial-preview-slot[data-slot-id]:not(.close):not(.add).drag-over::after {
+  border-color: rgba(var(--ok-rgb), 1);
+}
+
+.oa-rp-runtime .radial-preview-icon-stack {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.oa-rp-runtime .radial-preview-icon-layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.oa-rp-runtime .radial-preview-hotkey,
+.oa-rp-runtime .radial-preview-indicator {
+  box-sizing: border-box;
+}
+
+.oa-rp-runtime .radial-preview-tooltip {
+  position: absolute;
+  z-index: 8;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  border: var(--oa-stroke-width-normal) solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(var(--oa-color-black-0-rgb, 4, 4, 5), 0.32);
+}
+
+.oa-rp-runtime .radial-preview-slot.add {
+  border: var(--oa-stroke-width-normal) dashed rgba(var(--or-rgb), 0.92);
+  background: rgba(var(--or-rgb), 0.06);
+  color: rgb(var(--or-rgb));
+  font-size: 24px;
+  font-weight: 900;
+  animation: oaRadialPlusOpen 120ms ease-out both;
+}
+
+.oa-rp-runtime .radial-preview-slot.add:hover,
+.oa-rp-runtime .radial-preview-slot.add.hover-active {
+  border-color: rgba(var(--or-rgb), 0.92);
+  color: rgb(var(--or-rgb));
+}
+
+.oa-rp-runtime .radial-preview-slot.add.closing {
+  animation: oaRadialPlusClose 110ms ease-in both;
+  pointer-events: none;
+}
+
+.oa-rp-runtime .radial-preview-slot.add.selection-plus {
+  animation: oaRadialSelectionPlusOpen 120ms ease-out both;
+}
+
+.oa-rp-runtime .radial-preview-slot.add.selection-plus.closing {
+  animation: oaRadialSelectionPlusClose 110ms ease-in both;
+}
+
+@keyframes oaRadialPlusOpen {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.82); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes oaRadialPlusClose {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(0.82); }
+}
+
+@keyframes oaRadialSelectionPlusOpen {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes oaRadialSelectionPlusClose {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+}
+
+.oa-rp-runtime .radial-preview-trash-dropzone {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  z-index: 6;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--oa-stroke-width-normal) dashed rgba(var(--bad-rgb), 0.58);
+  border-radius: 999px;
+  background: rgba(var(--bad-rgb), 0.12);
+  color: var(--bad);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px) scale(0.7);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    background 120ms ease,
+    border-color 120ms ease;
+}
+
+.oa-rp-runtime .radial-preview-trash-dropzone svg {
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+
+.radial-preview-drag-active .oa-rp-runtime .radial-preview-trash-dropzone {
+  opacity: 0.82;
+  transform: translate(-50%, 0) scale(0.7);
+}
+
+.oa-rp-runtime .radial-preview-trash-dropzone.active {
+  opacity: 1;
+  background: rgba(var(--bad-rgb), 0.22);
+  border-style: solid;
+  border-color: rgba(var(--bad-rgb), 0.95);
+  transform: translate(-50%, 0) scale(1.04);
+}
+
+.radial-preview-drag-ghost {
+  position: fixed !important;
+  z-index: 999999 !important;
+  pointer-events: none !important;
+  opacity: 0.92;
+  transform: translate(-50%, -50%) scale(1.06) !important;
+  filter: drop-shadow(0 18px 28px rgba(var(--oa-color-black-0-rgb, 4, 4, 5), 0.42));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oa-rp-runtime .radial-preview-slot,
+  .oa-rp-runtime .radial-preview-slot.add,
+  .oa-rp-runtime .radial-preview-slot.add.closing,
+  .oa-rp-runtime .radial-preview-trash-dropzone {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
