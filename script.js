@@ -3,6 +3,26 @@ const INSTALL_COMMAND =
 
 const header = document.querySelector("[data-header]");
 
+function setupStepTypeEdgeHighlights() {
+  document.querySelectorAll(".step-type").forEach((card) => {
+    if (card.querySelector(":scope > .step-type__edge-highlight")) return;
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.classList.add("step-type__edge-highlight");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    svg.innerHTML = `
+      <rect class="step-type__edge-segment is-outer" x="0" y="0" width="100%" height="100%" rx="16" ry="16" pathLength="100"></rect>
+      <rect class="step-type__edge-segment is-tail" x="0" y="0" width="100%" height="100%" rx="16" ry="16" pathLength="100"></rect>
+      <rect class="step-type__edge-segment is-core" x="0" y="0" width="100%" height="100%" rx="16" ry="16" pathLength="100"></rect>
+      <rect class="step-type__edge-segment is-head" x="0" y="0" width="100%" height="100%" rx="16" ry="16" pathLength="100"></rect>
+    `;
+    card.prepend(svg);
+  });
+}
+
+setupStepTypeEdgeHighlights();
+
 function updateHeader() {
   header?.classList.toggle("is-scrolled", window.scrollY > 16);
 }
