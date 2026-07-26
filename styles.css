@@ -517,9 +517,10 @@ img {
 .tour-viewport {
   position: relative;
   overflow: hidden;
-  border-radius: clamp(5px, 1.25vw, 15px);
+  border-radius: 1.8% / 2.82%;
   background: #030304;
   box-shadow:
+    inset 0 0 0 1px rgb(37, 37, 37),
     0 32px 74px rgba(0, 0, 0, 0.5),
     0 0 64px -34px rgba(140, 31, 255, 0.84);
 }
@@ -548,33 +549,18 @@ img {
 }
 
 .tour-builder-frame {
-  --tour-builder-window-radius: clamp(3px, 0.42vw, 6px);
-
   overflow: hidden;
-  border-radius: var(--tour-builder-window-radius);
-  background: #030304;
-  box-shadow:
-    0 0 24px -18px rgba(140, 31, 255, 0.7);
-}
-
-.tour-builder-frame::after {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  box-sizing: border-box;
-  pointer-events: none;
-  border: 1px solid rgb(37, 37, 37);
-  border-radius: inherit;
-  content: "";
+  aspect-ratio: 2400 / 1310;
+  border-radius: 0;
+  background: #09090c;
 }
 
 .tour-builder-window {
   display: block;
   width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  object-fit: cover;
-  object-position: center;
+  max-width: none;
+  height: auto;
+  border-radius: 0;
   filter: saturate(0.98) contrast(1.015);
 }
 
@@ -2574,7 +2560,7 @@ footer {
   }
 
   .tour-viewport {
-    border-radius: 13px;
+    border-radius: 1.8% / 2.82%;
   }
 
   .tour-panel figcaption {
