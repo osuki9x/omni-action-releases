@@ -472,9 +472,21 @@
     const runtime = window.OA?.radialPreviewRuntime;
     if (!runtime?.mount) return;
     const compact = root.hasAttribute("data-compact");
+    const mode = root.dataset.radialMode || "run";
     const stage = document.createElement("div");
     const demoPointer = document.createElement("span");
     const replay = document.createElement("button");
+    let liveConfig = createRadialConfig(compact);
+    if (mode === "arrange") {
+      liveConfig = {
+        ...liveConfig,
+        settings: {
+          ...liveConfig.settings,
+          mainSize: 62,
+          mainRadius: 118,
+        },
+      };
+    }
     let radialDemoTimer = 0;
     let radialDemoPhase = 0;
     let radialDemoInView = !("IntersectionObserver" in window);
@@ -486,22 +498,205 @@
 
     root.classList.add("oa-rp-runtime");
     root.setAttribute("role", "region");
-    root.setAttribute("aria-label", "Interactive radial menu preview");
+    root.setAttribute(
+      "aria-label",
+      mode === "arrange"
+        ? "Animated radial menu arrangement preview"
+        : "Interactive radial menu preview",
+    );
     demoPointer.className = "oa-demo-radial__pointer";
     demoPointer.innerHTML =
       '<svg viewBox="0 0 20 24" aria-hidden="true"><path d="M3.2 2.2v16.9l4.25-4.05 3.15 6.75 3.1-1.45-3.15-6.65h6.1L3.2 2.2z"></path></svg>';
-    root.append(stage, demoPointer, replay);
+    root.append(stage, demoPointer);
+    if (mode !== "arrange") root.append(replay);
 
     const instance = runtime.mount(
       stage,
       {
-        config: createRadialConfig(compact),
+        config: liveConfig,
         animateOpen: !reducedMotion,
         showGuides: false,
         hasEmptyTempSlot: true,
       },
       {},
     );
+
+    if (mode === "arrange") {
+      const baseItems = liveConfig.items.slice();
+      const swaps = [
+        ["main.speed", "main.color"],
+        ["main.speed", "main.color"],
+      ];
+      const arrangeTimers = new Set();
+      let arrangeStep = 0;
+
+      function later(callback, delay) {
+        const timerID = window.setTimeout(() => {
+          arrangeTimers.delete(timerID);
+          callback();
+        }, delay);
+        arrangeTimers.add(timerID);
+      }
+
+      function clearArrangeTimers() {
+        arrangeTimers.forEach((timerID) => window.clearTimeout(timerID));
+        arrangeTimers.clear();
+      }
+
+      function clearArrangeVisuals() {
+        stage.querySelectorAll(".is-demo-drag-source").forEach((slot) => {
+          slot.classList.remove("is-demo-drag-source");
+        });
+        demoPointer.classList.remove("is-visible", "is-arrived", "is-dragging");
+      }
+
+      function slotCenter(slotID) {
+        const slot = stage.querySelector(
+          `.radial-preview-slot.main[data-slot-id="${CSS.escape(slotID)}"]`,
+        );
+        if (!slot) return null;
+        const rootRect = root.getBoundingClientRect();
+        const slotRect = slot.getBoundingClientRect();
+        return {
+          slot,
+          left: slotRect.left + slotRect.width / 2 - rootRect.left + 10,
+          top: slotRect.top + slotRect.height / 2 - rootRect.top + 8,
+        };
+      }
+
+      function captureSlotPositions() {
+        const positions = new Map();
+        stage.querySelectorAll(".radial-preview-slot.main[data-slot-id]").forEach((slot) => {
+          const rect = slot.getBoundingClientRect();
+          positions.set(slot.dataset.slotId, {
+            left: rect.left + rect.width / 2,
+            top: rect.top + rect.height / 2,
+          });
+        });
+        return positions;
+      }
+
+      function animateReorderedSlots(before) {
+        stage.querySelectorAll(".radial-preview-slot.main[data-slot-id]").forEach((slot) => {
+          const previous = before.get(slot.dataset.slotId);
+          if (!previous || typeof slot.animate !== "function") return;
+          const rect = slot.getBoundingClientRect();
+          const dx = previous.left - (rect.left + rect.width / 2);
+          const dy = previous.top - (rect.top + rect.height / 2);
+          if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
+          slot.animate(
+            [
+              {
+                transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`,
+              },
+              { transform: "translate(-50%, -50%)" },
+            ],
+            {
+              duration: 760,
+              easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+            },
+          );
+        });
+      }
+
+      function swapItems(firstSlotID, secondSlotID) {
+        const before = captureSlotPositions();
+        const nextItems = liveConfig.items.slice();
+        const firstIndex = nextItems.findIndex((item) => item.slotID === firstSlotID);
+        const secondIndex = nextItems.findIndex((item) => item.slotID === secondSlotID);
+        if (firstIndex < 0 || secondIndex < 0) return;
+        [nextItems[firstIndex], nextItems[secondIndex]] = [
+          nextItems[secondIndex],
+          nextItems[firstIndex],
+        ];
+        liveConfig = { ...liveConfig, items: nextItems };
+        instance.update({ config: liveConfig });
+        animateReorderedSlots(before);
+      }
+
+      function scheduleArrangeDemo(delay = 1000) {
+        clearArrangeTimers();
+        if (
+          reducedMotion ||
+          !radialDemoInView ||
+          root.matches(":hover") ||
+          root.contains(document.activeElement)
+        ) return;
+
+        later(() => {
+          const [sourceID, targetID] = swaps[arrangeStep % swaps.length];
+          const source = slotCenter(sourceID);
+          const target = slotCenter(targetID);
+          if (!source || !target) {
+            scheduleArrangeDemo(500);
+            return;
+          }
+
+          demoPointer.dataset.slotId = sourceID;
+          demoPointer.style.left = `${source.left}px`;
+          demoPointer.style.top = `${source.top}px`;
+          demoPointer.classList.add("is-visible");
+          demoPointer.classList.remove("is-arrived", "is-dragging");
+
+          later(() => {
+            if (root.matches(":hover")) return;
+            source.slot.classList.add("is-demo-drag-source");
+            demoPointer.classList.add("is-arrived", "is-dragging");
+            demoPointer.style.left = `${target.left}px`;
+            demoPointer.style.top = `${target.top}px`;
+          }, 620);
+
+          later(() => {
+            if (root.matches(":hover")) return;
+            swapItems(sourceID, targetID);
+            demoPointer.classList.remove("is-dragging");
+            demoPointer.classList.add("is-arrived");
+            arrangeStep = (arrangeStep + 1) % swaps.length;
+            later(() => scheduleArrangeDemo(0), 1700);
+          }, 1420);
+        }, delay);
+      }
+
+      function resetArrangeDemo() {
+        clearArrangeTimers();
+        clearArrangeVisuals();
+        arrangeStep = 0;
+        liveConfig = { ...liveConfig, items: baseItems.slice() };
+        instance.update({ config: liveConfig });
+      }
+
+      root.addEventListener("pointerenter", () => {
+        clearArrangeTimers();
+        clearArrangeVisuals();
+      });
+      root.addEventListener("pointerleave", () => scheduleArrangeDemo(850));
+      root.addEventListener("focusin", clearArrangeTimers);
+      root.addEventListener("focusout", () => window.setTimeout(() => {
+        if (!root.contains(document.activeElement)) scheduleArrangeDemo(850);
+      }, 0));
+
+      if ("IntersectionObserver" in window && !reducedMotion) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            if (entry?.isIntersecting && entry.intersectionRatio > 0.35) {
+              radialDemoInView = true;
+              resetArrangeDemo();
+              scheduleArrangeDemo(900);
+            } else {
+              radialDemoInView = false;
+              clearArrangeTimers();
+              clearArrangeVisuals();
+            }
+          },
+          { threshold: [0.15, 0.35] },
+        );
+        observer.observe(root);
+      } else {
+        scheduleArrangeDemo();
+      }
+      return;
+    }
 
     replay.addEventListener("click", () => {
       instance.replay();

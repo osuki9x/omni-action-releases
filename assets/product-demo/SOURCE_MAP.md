@@ -37,4 +37,6 @@ The vendored renderer and CSS should be refreshed together. The browser bridge
 must remain limited to local asset resolution; do not expose Builder persistence
 or Hammerspoon messaging to the public website demo. Website choreography drives
 the renderer through ordinary pointer events and pauses whenever the visitor
-takes control.
+takes control. The compact Arrange tour reorders only its local demo payload and
+uses FLIP transitions to demonstrate item placement; it never mutates Builder
+data.

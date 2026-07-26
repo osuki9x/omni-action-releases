@@ -107,6 +107,160 @@ function setupProductTour() {
 
 setupProductTour();
 
+function setupTargetDemo(root) {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const stateLabel = root.querySelector("[data-target-state]");
+  const targetName = root.querySelector("[data-target-name]");
+  const instruction = root.querySelector("[data-target-instruction]");
+  const coach = root.querySelector("[data-target-coach]");
+  const controls = [...root.querySelectorAll("[data-target-key]")];
+  const phases = [
+    {
+      key: "zoom",
+      state: "aiming",
+      label: "AIMING",
+      name: "Inspector · Zoom",
+      top: "72px",
+      right: "calc(34px + 25%)",
+      x: "46%",
+      y: "91px",
+      hold: 1450,
+    },
+    {
+      key: "position",
+      state: "aiming",
+      label: "AIMING",
+      name: "Inspector · Position",
+      top: "124px",
+      right: "calc(34px + 10%)",
+      x: "68%",
+      y: "143px",
+      hold: 1450,
+    },
+    {
+      key: "opacity",
+      state: "aiming",
+      label: "AIMING",
+      name: "Inspector · Opacity",
+      top: "176px",
+      right: "34px",
+      x: "60%",
+      y: "195px",
+      hold: 1600,
+    },
+    {
+      key: "opacity",
+      state: "locked",
+      label: "LOCKED",
+      name: "Inspector · Opacity",
+      top: "176px",
+      right: "34px",
+      x: "60%",
+      y: "195px",
+      hold: 1150,
+    },
+    {
+      key: "opacity",
+      state: "captured",
+      label: "CAPTURED",
+      name: "Inspector · Opacity",
+      top: "176px",
+      right: "34px",
+      x: "60%",
+      y: "195px",
+      hold: 1750,
+    },
+    {
+      key: "opacity",
+      state: "aiming",
+      label: "AIMING",
+      name: "Inspector · Opacity",
+      top: "176px",
+      right: "34px",
+      x: "60%",
+      y: "195px",
+      hold: 320,
+    },
+  ];
+  let phaseIndex = 0;
+  let timer = 0;
+  let inView = !("IntersectionObserver" in window);
+
+  function applyPhase(phase) {
+    root.classList.toggle("is-locked", phase.state === "locked");
+    root.classList.toggle("is-captured", phase.state === "captured");
+    root.style.setProperty("--target-outline-top", phase.top);
+    root.style.setProperty("--target-outline-right", phase.right);
+    root.style.setProperty("--target-crosshair-x", phase.x);
+    root.style.setProperty("--target-crosshair-y", phase.y);
+    controls.forEach((control) => {
+      control.classList.toggle("is-targeted", control.dataset.targetKey === phase.key);
+    });
+    if (stateLabel) stateLabel.textContent = phase.label;
+    if (targetName) targetName.textContent = phase.name;
+
+    if (phase.state === "locked") {
+      if (instruction) instruction.textContent = "Click to select target";
+      if (coach) coach.innerHTML = "Target locked. <b>Click</b> to capture this control.";
+    } else if (phase.state === "captured") {
+      if (instruction) instruction.textContent = "Target captured";
+      if (coach) coach.innerHTML = "<b>Captured.</b> The macro can return to this control.";
+    } else {
+      if (instruction) instruction.innerHTML = "Hold <kbd>⌘</kbd> to lock target";
+      if (coach) {
+        coach.innerHTML =
+          "Hold <b>⌘</b> or <b>fn</b> to lock the highlighted target, then <b>click</b> to select it.";
+      }
+    }
+  }
+
+  function stop() {
+    window.clearTimeout(timer);
+    timer = 0;
+  }
+
+  function schedule(delay = 0) {
+    stop();
+    if (reducedMotion || !inView) return;
+    timer = window.setTimeout(() => {
+      const phase = phases[phaseIndex % phases.length];
+      applyPhase(phase);
+      phaseIndex = (phaseIndex + 1) % phases.length;
+      schedule(phase.hold);
+    }, delay);
+  }
+
+  if (reducedMotion) {
+    applyPhase(phases[2]);
+    return;
+  }
+
+  applyPhase(phases[0]);
+  phaseIndex = 1;
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting && entry.intersectionRatio > 0.35) {
+          inView = true;
+          phaseIndex = 0;
+          schedule(120);
+        } else {
+          inView = false;
+          stop();
+        }
+      },
+      { threshold: [0.15, 0.35] },
+    );
+    observer.observe(root);
+  } else {
+    schedule(120);
+  }
+}
+
+document.querySelectorAll("[data-target-demo]").forEach(setupTargetDemo);
+
 document.querySelector("[data-copy-command]")?.addEventListener("click", async (event) => {
   const button = event.currentTarget;
   const label = button.querySelector("[data-copy-label]");

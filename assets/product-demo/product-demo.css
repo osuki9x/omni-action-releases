@@ -722,6 +722,22 @@
   transform: translate(-3px, -3px) scale(0.84);
 }
 
+.oa-demo-radial__pointer.is-dragging {
+  filter:
+    drop-shadow(0 3px 4px rgba(0, 0, 0, 0.72))
+    drop-shadow(0 0 10px rgba(255, 122, 24, 0.42));
+  transform: translate(-3px, -3px) scale(0.78);
+}
+
+.oa-demo-radial--arrange .radial-preview-slot.main.is-demo-drag-source {
+  outline: var(--oa-stroke-width-strong) solid rgba(255, 122, 24, 0.74);
+  outline-offset: 3px;
+  opacity: 0.58;
+  box-shadow:
+    0 0 22px -5px rgba(255, 122, 24, 0.72),
+    0 10px 28px rgba(4, 4, 5, 0.26);
+}
+
 .oa-demo-radial__pointer svg {
   display: block;
   width: 100%;

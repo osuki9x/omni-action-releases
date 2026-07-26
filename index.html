@@ -30,11 +30,11 @@
     <script>document.documentElement.classList.add("js");</script>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="assets/product-demo/radial-preview-runtime.css" />
-    <link rel="stylesheet" href="assets/product-demo/product-demo.css?v=6" />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="assets/product-demo/product-demo.css?v=7" />
+    <script src="script.js?v=2" defer></script>
     <script src="assets/product-demo/product-demo-bridge.js" defer></script>
     <script src="assets/product-demo/radial-preview-runtime.js" defer></script>
-    <script src="assets/product-demo/product-demo.js?v=9" defer></script>
+    <script src="assets/product-demo/product-demo.js?v=10" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -166,12 +166,17 @@
                   aria-labelledby="tour-tab-build"
                   data-tour-panel="build"
                 >
-                  <div class="tour-step-stage">
-                    <div class="oa-product-step-demo" data-step-demo data-compact></div>
-                  </div>
+                  <img
+                    class="tour-builder-window"
+                    src="assets/shots/builder-manager.png"
+                    alt="The complete Omni Action Builder window."
+                    width="2400"
+                    height="1329"
+                    decoding="async"
+                  />
                   <figcaption>
-                    <strong>Build a readable macro.</strong>
-                    <span>Select a row to inspect its action.</span>
+                    <strong>Build in one visual workspace.</strong>
+                    <span>Macros, triggers, and radial menus stay together.</span>
                   </figcaption>
                 </figure>
 
@@ -183,17 +188,17 @@
                   data-tour-panel="arrange"
                   hidden
                 >
-                  <img
-                    src="assets/shots/builder-manager.png"
-                    alt="Omni Action Builder showing the macro list and radial menu workspace."
-                    width="2400"
-                    height="1329"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div class="tour-radial-crop">
+                    <div
+                      class="oa-demo-radial oa-demo-radial--arrange"
+                      data-radial-demo
+                      data-radial-mode="arrange"
+                      data-compact
+                    ></div>
+                  </div>
                   <figcaption>
-                    <strong>Keep actions close.</strong>
-                    <span>Assign a shortcut or place a macro in the radial menu.</span>
+                    <strong>Arrange the menu around your gesture.</strong>
+                    <span>Drag an item to place it where it feels natural.</span>
                   </figcaption>
                 </figure>
 
@@ -297,29 +302,44 @@
                   <span><i></i> Screen point</span>
                 </div>
               </div>
-              <div class="target-visual" aria-label="Animated Target Picker example">
+              <div
+                class="target-visual"
+                data-target-demo
+                aria-label="Animated Target Picker example"
+              >
                 <div class="target-app" aria-hidden="true">
                   <div class="target-app__bar"></div>
                   <div class="target-app__rail"><i></i><i></i><i></i><i></i></div>
                   <div class="target-app__content">
-                    <span></span><span></span>
-                    <div class="target-control">Opacity <b>80</b></div>
-                    <span></span>
+                    <div class="target-control" data-target-key="zoom">
+                      Zoom <b>1.00</b>
+                    </div>
+                    <div class="target-control" data-target-key="position">
+                      Position <b>960 × 540</b>
+                    </div>
+                    <div class="target-control" data-target-key="opacity">
+                      Opacity <b>80</b>
+                    </div>
+                    <div class="target-control" data-target-key="rotation">
+                      Rotation <b>0°</b>
+                    </div>
                   </div>
                   <div class="target-outline"></div>
                   <div class="target-crosshair"><i></i></div>
                 </div>
                 <div class="target-picker-bar">
-                  <span class="target-state"><i></i><b>AIMING</b></span>
+                  <span class="target-state"><i></i><b data-target-state>AIMING</b></span>
                   <span class="target-separator"></span>
                   <span class="target-identity">
                     <em>UI</em>
-                    <strong>Inspector · Opacity</strong>
+                    <strong data-target-name>Inspector · Zoom</strong>
                   </span>
                   <span class="target-separator"></span>
-                  <span class="target-instruction">Hold <kbd>⌘</kbd> to lock target</span>
+                  <span class="target-instruction" data-target-instruction>
+                    Hold <kbd>⌘</kbd> to lock target
+                  </span>
                 </div>
-                <div class="target-coach">
+                <div class="target-coach" data-target-coach>
                   Hold <b>⌘</b> or <b>fn</b> to lock the highlighted target,
                   then <b>click</b> to select it.
                 </div>
