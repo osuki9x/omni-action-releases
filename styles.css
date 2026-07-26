@@ -1621,17 +1621,11 @@ img {
   opacity: 0;
 }
 
-.step-type.is-visible::after {
+.step-type-grid.is-visible .step-type::after {
   animation:
     step-edge-motion 1.24s var(--step-edge-delay) var(--step-edge-motion-easing) both,
     step-edge-visibility 1.24s var(--step-edge-delay) linear both;
 }
-
-.step-type:nth-child(2) { --step-edge-delay: 280ms; }
-.step-type:nth-child(3) { --step-edge-delay: 380ms; }
-.step-type:nth-child(4) { --step-edge-delay: 480ms; }
-.step-type:nth-child(5) { --step-edge-delay: 580ms; }
-.step-type:nth-child(6) { --step-edge-delay: 680ms; }
 
 .step-type:hover {
   border-color: rgba(var(--step-rgb), 0.34);

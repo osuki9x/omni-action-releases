@@ -10,7 +10,9 @@ function updateHeader() {
 updateHeader();
 window.addEventListener("scroll", updateHeader, { passive: true });
 
-const revealElements = [...document.querySelectorAll(".reveal")];
+const revealElements = [
+  ...document.querySelectorAll(".reveal, [data-reveal-group]"),
+];
 
 if ("IntersectionObserver" in window) {
   const revealObserver = new IntersectionObserver(
