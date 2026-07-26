@@ -406,52 +406,66 @@ img {
 }
 
 .button--primary::before {
-  inset: -12px -15px;
+  inset: -23px -31px;
   background:
     radial-gradient(
-      ellipse 72% 76% at 50% 50%,
-      rgba(210, 164, 255, 0.42) 0%,
-      rgba(var(--oa-accent-rgb), 0.27) 32%,
-      rgba(var(--oa-accent-rgb), 0.12) 56%,
-      transparent 78%
+      ellipse 78% 74% at 50% 50%,
+      rgba(222, 188, 255, 0.48) 0%,
+      rgba(var(--oa-accent-rgb), 0.34) 28%,
+      rgba(var(--oa-accent-rgb), 0.17) 51%,
+      transparent 74%
     );
-  filter: blur(9px);
-  transform: scale3d(0.96, 0.9, 1);
+  filter: blur(17px);
+  transform: scale3d(0.99, 0.98, 1);
 }
 
 .button--primary::after {
-  inset: -3px -5px;
+  inset: -2px -3px;
   background:
+    linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(var(--oa-accent-rgb), 0.15) 10%,
+        rgba(var(--oa-accent-rgb), 0.62) 34%,
+        rgba(210, 164, 255, 0.94) 44%,
+        rgba(255, 255, 255, 1) 49%,
+        rgba(255, 255, 255, 1) 51%,
+        rgba(210, 164, 255, 0.94) 56%,
+        rgba(var(--oa-accent-rgb), 0.62) 66%,
+        rgba(var(--oa-accent-rgb), 0.15) 90%,
+        transparent 100%
+      )
+      50% 0 / 84% 1.5px no-repeat,
+    linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(var(--oa-accent-rgb), 0.13) 10%,
+        rgba(var(--oa-accent-rgb), 0.54) 34%,
+        rgba(210, 164, 255, 0.84) 44%,
+        rgba(255, 255, 255, 0.94) 49%,
+        rgba(255, 255, 255, 0.94) 51%,
+        rgba(210, 164, 255, 0.84) 56%,
+        rgba(var(--oa-accent-rgb), 0.54) 66%,
+        rgba(var(--oa-accent-rgb), 0.13) 90%,
+        transparent 100%
+      )
+      50% 100% / 84% 1.5px no-repeat,
     radial-gradient(
-      ellipse 24% 4px at 50% 0%,
-      rgba(255, 255, 255, 0.98) 0%,
-      rgba(255, 255, 255, 0.95) 12%,
-      rgba(210, 164, 255, 0.9) 30%,
-      rgba(var(--oa-accent-rgb), 0.58) 54%,
-      transparent 82%
+      ellipse 42% 10px at 50% 0%,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(210, 164, 255, 0.42) 22%,
+      rgba(var(--oa-accent-rgb), 0.28) 48%,
+      transparent 78%
     ),
     radial-gradient(
-      ellipse 24% 4px at 50% 100%,
-      rgba(255, 255, 255, 0.92) 0%,
-      rgba(255, 255, 255, 0.88) 12%,
-      rgba(210, 164, 255, 0.82) 30%,
-      rgba(var(--oa-accent-rgb), 0.52) 54%,
-      transparent 82%
-    ),
-    radial-gradient(
-      ellipse 66% 13px at 50% 0%,
-      rgba(var(--oa-accent-rgb), 0.42),
-      rgba(var(--oa-accent-rgb), 0.18) 40%,
-      transparent 75%
-    ),
-    radial-gradient(
-      ellipse 66% 13px at 50% 100%,
-      rgba(var(--oa-accent-rgb), 0.38),
-      rgba(var(--oa-accent-rgb), 0.16) 40%,
-      transparent 75%
+      ellipse 42% 10px at 50% 100%,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(210, 164, 255, 0.36) 22%,
+      rgba(var(--oa-accent-rgb), 0.24) 48%,
+      transparent 78%
     );
-  filter: blur(0.55px);
-  transform: scale3d(0.94, 0.97, 1);
+  filter: blur(0.25px);
+  transform: scale3d(0.985, 0.99, 1);
 }
 
 .button--primary:hover {
@@ -460,6 +474,12 @@ img {
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
     0 15px 30px -16px rgba(140, 31, 255, 1),
     0 0 30px -11px rgba(140, 31, 255, 0.95);
+}
+
+.js
+  .reveal.is-visible
+  .button--primary:not(:hover):not(:focus-visible):not(:active) {
+  animation: primary-cta-luminance 7.2s 700ms linear infinite both;
 }
 
 .js
@@ -2396,59 +2416,99 @@ footer {
 
 @keyframes primary-cta-aura-bloom {
   0%,
-  9.5%,
-  25%,
+  10%,
+  24%,
   100% {
     opacity: 0;
-    filter: blur(10px);
-    transform: scale3d(0.96, 0.9, 1);
+    filter: blur(18px);
+    transform: scale3d(0.99, 0.98, 1);
   }
 
-  12.5% {
-    opacity: 0.22;
-    filter: blur(9.5px);
-    transform: scale3d(0.98, 0.95, 1);
+  12.2% {
+    opacity: 0.34;
+    filter: blur(15px);
+    transform: scale3d(0.995, 0.99, 1);
   }
 
-  15.2% {
-    opacity: 0.92;
-    filter: blur(7.5px);
-    transform: scale3d(1, 1.015, 1);
+  14.8% {
+    opacity: 1;
+    filter: blur(11px);
+    transform: scale3d(1, 1, 1);
   }
 
-  19.5% {
-    opacity: 0.5;
-    filter: blur(10.5px);
-    transform: scale3d(1.025, 1.07, 1);
+  18.5% {
+    opacity: 0.62;
+    filter: blur(15px);
+    transform: scale3d(1.008, 1.025, 1);
   }
 }
 
 @keyframes primary-cta-edge-bloom {
   0%,
   10%,
-  22.5%,
+  22%,
   100% {
     opacity: 0;
-    filter: blur(0.8px);
-    transform: scale3d(0.94, 0.97, 1);
-  }
-
-  12.4% {
-    opacity: 0.34;
     filter: blur(0.65px);
-    transform: scale3d(0.975, 0.99, 1);
+    transform: scale3d(0.985, 0.99, 1);
   }
 
-  14.8% {
+  12% {
+    opacity: 0.46;
+    filter: blur(0.4px);
+    transform: scale3d(0.992, 0.996, 1);
+  }
+
+  14.4% {
     opacity: 1;
-    filter: blur(0.35px);
+    filter: blur(0);
     transform: scale3d(1, 1, 1);
   }
 
+  18% {
+    opacity: 0.64;
+    filter: blur(0.45px);
+    transform: scale3d(1.006, 1.012, 1);
+  }
+}
+
+@keyframes primary-cta-luminance {
+  0%,
+  10%,
+  24%,
+  100% {
+    border-color: rgba(210, 164, 255, 0.58);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.23),
+      0 12px 26px -16px rgba(140, 31, 255, 0.9),
+      0 0 24px -12px rgba(140, 31, 255, 0.9);
+  }
+
+  12.4% {
+    border-color: rgba(225, 197, 255, 0.75);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 14px 30px -15px rgba(var(--oa-accent-rgb), 0.96),
+      0 0 34px -9px rgba(var(--oa-accent-rgb), 0.95),
+      0 0 52px -20px rgba(210, 164, 255, 0.72);
+  }
+
+  14.8% {
+    border-color: rgba(244, 230, 255, 0.94);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.42),
+      0 16px 34px -14px rgba(var(--oa-accent-rgb), 1),
+      0 0 42px -7px rgba(var(--oa-accent-rgb), 1),
+      0 0 72px -21px rgba(210, 164, 255, 0.9);
+  }
+
   18.5% {
-    opacity: 0.56;
-    filter: blur(0.75px);
-    transform: scale3d(1.012, 1.025, 1);
+    border-color: rgba(225, 197, 255, 0.76);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.31),
+      0 15px 31px -15px rgba(var(--oa-accent-rgb), 0.98),
+      0 0 35px -8px rgba(var(--oa-accent-rgb), 0.94),
+      0 0 56px -20px rgba(210, 164, 255, 0.68);
   }
 }
 
@@ -2686,6 +2746,14 @@ footer {
 
   .hero-actions .button {
     width: 100%;
+  }
+
+  .hero-actions .button--primary::before {
+    inset-inline: -10px;
+  }
+
+  .hero-actions .button--primary::after {
+    inset-inline: 0;
   }
 
   .tour-tabs {
