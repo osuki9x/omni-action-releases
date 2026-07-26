@@ -40,8 +40,8 @@
     {
       id: "open-inspector",
       type: "command",
-      summary: "Workspace · Show Inspector",
-      detail: "Opens the panel used by the next actions.",
+      summary: "Edit · Multicam · Video and Audio",
+      detail: "Runs an application menu command.",
     },
     {
       id: "select-effect",
@@ -109,11 +109,36 @@
 
     const repeat = document.createElement("span");
     repeat.className = "oa-demo-step__repeat";
-    repeat.textContent = step.repeat || "";
     repeat.hidden = !step.repeat;
+    if (step.repeat) {
+      repeat.innerHTML = `
+        <button class="oa-demo-repeat__badge" type="button" aria-label="Edit repeat settings">
+          <span>${step.repeat}</span>
+        </button>
+        <span class="oa-demo-repeat__editor" aria-hidden="true">
+          <span class="oa-demo-repeat__field"><small>Repeat</small><b>2×</b></span>
+          <span class="oa-demo-repeat__field"><small>Gap</small><b>0.2s</b></span>
+          <span class="oa-demo-repeat__tool">↺</span>
+          <span class="oa-demo-repeat__tool is-confirm">✓</span>
+          <span class="oa-demo-repeat__tool is-cancel">×</span>
+        </span>
+      `;
+      repeat.querySelector(".oa-demo-repeat__badge")?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        callbacks?.toggleRepeat(step.id);
+      });
+    }
 
     const actions = document.createElement("span");
     actions.className = "oa-demo-step__actions";
+    const play = createIconButton(
+      `Test ${type.title}`,
+      '<svg class="is-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.4c0-.8.9-1.3 1.6-.9l6 4.1c.6.4.6 1.4 0 1.8l-6 4.1c-.7.4-1.6-.1-1.6-.9V3.4z"></path></svg>',
+    );
+    play.addEventListener("click", (event) => {
+      event.stopPropagation();
+      callbacks?.test(step.id);
+    });
     const duplicate = createIconButton(
       `Duplicate ${type.title}`,
       '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="6.5" y="3.5" width="10" height="10" rx="2"></rect><path d="M13.5 13.5v1a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h1"></path></svg>',
@@ -131,7 +156,7 @@
       event.stopPropagation();
       callbacks?.remove(step.id);
     });
-    actions.append(duplicate, remove);
+    actions.append(play, duplicate, remove);
 
     head.append(handle, number, icon, copy, repeat, actions);
 
@@ -143,22 +168,32 @@
           <span class="oa-demo-step-editor__label">Command</span>
           <span class="oa-demo-step-editor__control">
             <img src="${type.icon}" alt="" />
-            <span>Workspace › Show Inspector</span>
+            <span>Edit › Multicam › Video and Audio</span>
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 5 5 5-5 5"></path></svg>
           </span>
         </div>
-        <span class="oa-demo-step-editor__status">Command ready</span>
+        <kbd class="oa-demo-step-editor__shortcut">⌥⌘V</kbd>
       `;
     } else if (step.type === "axAction") {
+      body.classList.add("oa-demo-step__body--target");
       body.innerHTML = `
-        <div class="oa-demo-step-editor">
-          <span class="oa-demo-step-editor__label">Interface target</span>
-          <span class="oa-demo-step-editor__control">
-            <span class="oa-demo-step-editor__target" aria-hidden="true"></span>
-            <span>Inspector › Stabilization › Stabilize</span>
+        <div class="oa-demo-target is-captured">
+          <span class="oa-demo-target__icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20"><path d="m5.7 10.2 2.6 2.6 6-6"></path></svg>
           </span>
+          <span class="oa-demo-target__copy">
+            <strong>Stabilize</strong>
+            <small>Inspector › Stabilization</small>
+          </span>
+          <button class="oa-demo-target__capture" type="button">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="8" cy="8" r="4.6"></circle>
+              <circle cx="8" cy="8" r="1" fill="currentColor" stroke="none"></circle>
+              <path d="M8 1.4v2.2M8 12.4v2.2M1.4 8h2.2M12.4 8h2.2"></path>
+            </svg>
+            <span>Capture</span>
+          </button>
         </div>
-        <button class="oa-demo-step-editor__button" type="button">Capture</button>
       `;
     } else {
       body.innerHTML = `
@@ -184,7 +219,9 @@
     let draggedID = "";
     let pointerDrag = null;
     let openStepID = compact ? "" : "select-effect";
+    let repeatEditingID = "";
     let autoDemoTimer = 0;
+    let repeatDemoTimer = 0;
     const autoDemoSteps = ["select-effect", "open-inspector"];
     const dropIndicator = document.createElement("div");
     dropIndicator.className = "oa-demo-drop-indicator";
@@ -223,6 +260,24 @@
       }, 4600);
     }
 
+    function setRepeatEditing(stepID) {
+      repeatEditingID = stepID || "";
+      list.querySelectorAll(".oa-demo-step").forEach((row) => {
+        row.classList.toggle("is-repeat-editing", row.dataset.stepId === repeatEditingID);
+      });
+    }
+
+    function scheduleRepeatDemo(delay = 2600) {
+      window.clearTimeout(repeatDemoTimer);
+      if (compact || reducedMotion || root.matches(":hover") || root.contains(document.activeElement)) {
+        return;
+      }
+      repeatDemoTimer = window.setTimeout(() => {
+        setRepeatEditing(repeatEditingID ? "" : "set-value");
+        scheduleRepeatDemo(repeatEditingID ? 2200 : 3900);
+      }, delay);
+    }
+
     root.addEventListener("pointermove", (event) => {
       const row = event.target.closest(".oa-demo-step");
       if (!row) return;
@@ -237,6 +292,18 @@
         const row = createStepRow(step, index, compact, {
           toggle(stepID) {
             setOpenStep(stepID, { restart: true });
+          },
+          toggleRepeat(stepID) {
+            setRepeatEditing(repeatEditingID === stepID ? "" : stepID);
+            scheduleRepeatDemo();
+          },
+          test(stepID) {
+            const testedRow = list.querySelector(`[data-step-id="${CSS.escape(stepID)}"]`);
+            if (!testedRow) return;
+            testedRow.classList.remove("is-testing");
+            void testedRow.offsetWidth;
+            testedRow.classList.add("is-testing");
+            window.setTimeout(() => testedRow.classList.remove("is-testing"), 1100);
           },
           duplicate(stepID) {
             const sourceIndex = steps.findIndex((candidate) => candidate.id === stepID);
@@ -259,6 +326,7 @@
         list.appendChild(row);
       });
       setOpenStep(openStepID);
+      setRepeatEditing(repeatEditingID);
     }
 
     if (!compact) {
@@ -374,11 +442,24 @@
 
     render();
     if (!compact) {
-      root.addEventListener("pointerenter", () => window.clearTimeout(autoDemoTimer));
-      root.addEventListener("pointerleave", scheduleAutoDemo);
-      root.addEventListener("focusin", () => window.clearTimeout(autoDemoTimer));
-      root.addEventListener("focusout", () => window.setTimeout(scheduleAutoDemo, 0));
+      root.addEventListener("pointerenter", () => {
+        window.clearTimeout(autoDemoTimer);
+        window.clearTimeout(repeatDemoTimer);
+      });
+      root.addEventListener("pointerleave", () => {
+        scheduleAutoDemo();
+        scheduleRepeatDemo();
+      });
+      root.addEventListener("focusin", () => {
+        window.clearTimeout(autoDemoTimer);
+        window.clearTimeout(repeatDemoTimer);
+      });
+      root.addEventListener("focusout", () => window.setTimeout(() => {
+        scheduleAutoDemo();
+        scheduleRepeatDemo();
+      }, 0));
       scheduleAutoDemo();
+      scheduleRepeatDemo();
     }
   }
 
@@ -506,7 +587,11 @@
     if (!runtime?.mount) return;
     const compact = root.hasAttribute("data-compact");
     const stage = document.createElement("div");
+    const demoPointer = document.createElement("span");
     const replay = document.createElement("button");
+    let radialDemoTimer = 0;
+    let radialDemoPhase = 0;
+    let radialDemoInView = !("IntersectionObserver" in window);
     replay.type = "button";
     replay.className = "oa-demo-radial__replay";
     replay.setAttribute("aria-label", "Replay radial menu animation");
@@ -516,7 +601,10 @@
     root.classList.add("oa-rp-runtime");
     root.setAttribute("role", "region");
     root.setAttribute("aria-label", "Interactive radial menu preview");
-    root.append(stage, replay);
+    demoPointer.className = "oa-demo-radial__pointer";
+    demoPointer.innerHTML =
+      '<svg viewBox="0 0 20 24" aria-hidden="true"><path d="M3.2 2.2v16.9l4.25-4.05 3.15 6.75 3.1-1.45-3.15-6.65h6.1L3.2 2.2z"></path></svg>';
+    root.append(stage, demoPointer, replay);
 
     const instance = runtime.mount(
       stage,
@@ -531,18 +619,87 @@
 
     replay.addEventListener("click", () => instance.replay());
 
+    const radialDemoSequence = [
+      { slotID: "main.speed", hold: 1500 },
+      { slotID: "main.rough-cut", hold: 1800 },
+      { slotID: "sub.subtitle", hold: 1600 },
+      { slotID: "main.color", hold: 1800 },
+      { slotID: "sub.color.asset", hold: 1700 },
+      { slotID: "main.reverb", hold: 1700 },
+    ];
+
+    function clearSyntheticHover() {
+      stage.dispatchEvent(new window.MouseEvent("mouseleave"));
+      demoPointer.classList.remove("is-visible", "is-arrived");
+    }
+
+    function scheduleRadialDemo(delay = 1200) {
+      window.clearTimeout(radialDemoTimer);
+      if (
+        reducedMotion ||
+        !radialDemoInView ||
+        root.matches(":hover") ||
+        root.contains(document.activeElement)
+      ) return;
+      radialDemoTimer = window.setTimeout(() => {
+        const phase = radialDemoSequence[radialDemoPhase % radialDemoSequence.length];
+        const slot = stage.querySelector(
+          `.radial-preview-slot[data-slot-id="${CSS.escape(phase.slotID)}"]`,
+        );
+        if (!slot) {
+          scheduleRadialDemo(500);
+          return;
+        }
+        const rootRect = root.getBoundingClientRect();
+        const slotRect = slot.getBoundingClientRect();
+        const clientX = slotRect.left + slotRect.width / 2;
+        const clientY = slotRect.top + slotRect.height / 2;
+        demoPointer.dataset.slotId = phase.slotID;
+        demoPointer.style.left = `${clientX - rootRect.left}px`;
+        demoPointer.style.top = `${clientY - rootRect.top}px`;
+        demoPointer.classList.add("is-visible");
+        demoPointer.classList.remove("is-arrived");
+        window.setTimeout(() => {
+          if (root.matches(":hover")) return;
+          demoPointer.classList.add("is-arrived");
+          stage.dispatchEvent(
+            new window.MouseEvent("mousemove", { bubbles: true, clientX, clientY }),
+          );
+        }, 620);
+        radialDemoPhase += 1;
+        scheduleRadialDemo(phase.hold + 620);
+      }, delay);
+    }
+
+    root.addEventListener("pointerenter", () => {
+      window.clearTimeout(radialDemoTimer);
+      clearSyntheticHover();
+    });
+    root.addEventListener("pointerleave", () => scheduleRadialDemo(900));
+
     if ("IntersectionObserver" in window && !reducedMotion) {
       const observer = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
             if (entry.isIntersecting && entry.intersectionRatio > 0.45) {
-              instance.replay();
+              const wasInView = radialDemoInView;
+              radialDemoInView = true;
+              if (!wasInView) {
+                instance.replay();
+                scheduleRadialDemo(900);
+              }
+            } else if (!entry.isIntersecting || entry.intersectionRatio < 0.2) {
+              radialDemoInView = false;
+              window.clearTimeout(radialDemoTimer);
+              clearSyntheticHover();
             }
           }
         },
-        { threshold: [0.45] },
+        { threshold: [0.2, 0.45] },
       );
       observer.observe(root);
+    } else {
+      scheduleRadialDemo();
     }
   }
 

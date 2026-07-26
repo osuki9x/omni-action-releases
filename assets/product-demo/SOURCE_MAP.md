@@ -16,7 +16,9 @@ changes do not turn the website into a second, drifting design system.
   `assets/product-demo/product-demo.css`
 
 The website keeps only local sample state, expand/collapse, duplicate/remove,
-and drag-to-reorder interactions. It does not persist or execute steps.
+test feedback, repeat-pill editing, and drag-to-reorder interactions. Its
+autonomous choreography pauses while the visitor is interacting. It does not
+persist or execute steps.
 
 ## Radial Preview
 
@@ -34,4 +36,6 @@ and drag-to-reorder interactions. It does not persist or execute steps.
 
 The vendored renderer and CSS should be refreshed together. The browser bridge
 must remain limited to local asset resolution; do not expose Builder persistence
-or Hammerspoon messaging to the public website demo.
+or Hammerspoon messaging to the public website demo. Website choreography drives
+the renderer through ordinary pointer events and pauses whenever the visitor
+takes control.
