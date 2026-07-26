@@ -567,6 +567,7 @@
       let arrangeStep = 0;
       let arrangeFrameID = 0;
       const syntheticPointerID = 91;
+      const dropSettleDelay = 140;
 
       function later(callback, delay) {
         const timerID = window.setTimeout(() => {
@@ -686,20 +687,37 @@
         );
       }
 
-      function pointOnDragArc(source, target, progress) {
-        const controlX = (source.clientX + target.clientX) / 2;
-        const controlY =
-          Math.min(source.clientY, target.clientY) -
-          Math.max(78, Math.abs(target.clientX - source.clientX) * 0.2);
-        const inverse = 1 - progress;
-        const clientX =
-          inverse * inverse * source.clientX +
-          2 * inverse * progress * controlX +
-          progress * progress * target.clientX;
-        const clientY =
-          inverse * inverse * source.clientY +
-          2 * inverse * progress * controlY +
-          progress * progress * target.clientY;
+      function radialCenterPoint() {
+        const close = stage.querySelector(".radial-preview-slot.close");
+        if (!close) return null;
+        const rect = close.getBoundingClientRect();
+        return {
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height / 2,
+        };
+      }
+
+      function pointOnDragArc(source, target, center, progress) {
+        const sourceX = source.clientX - center.clientX;
+        const sourceY = source.clientY - center.clientY;
+        const targetX = target.clientX - center.clientX;
+        const targetY = target.clientY - center.clientY;
+        const sourceRadius = Math.hypot(sourceX, sourceY);
+        const targetRadius = Math.hypot(targetX, targetY);
+        let sourceAngle = Math.atan2(sourceY, sourceX);
+        let targetAngle = Math.atan2(targetY, targetX);
+
+        if (sourceAngle > Math.PI / 2) sourceAngle -= Math.PI * 2;
+        if (targetAngle > Math.PI / 2) targetAngle -= Math.PI * 2;
+
+        const angleProgress = progress * progress * (3 - 2 * progress);
+        const angle = sourceAngle + (targetAngle - sourceAngle) * angleProgress;
+        const baseRadius = sourceRadius + (targetRadius - sourceRadius) * progress;
+        const outerRadius = Math.max(sourceRadius, targetRadius) + 150;
+        const radialProgress = Math.pow(Math.sin(Math.PI * progress), 0.56);
+        const radius = baseRadius + (outerRadius - baseRadius) * radialProgress;
+        const clientX = center.clientX + Math.cos(angle) * radius;
+        const clientY = center.clientY + Math.sin(angle) * radius;
         const rootRect = root.getBoundingClientRect();
         return {
           clientX,
@@ -709,7 +727,7 @@
         };
       }
 
-      function animateArrangeDrag(source, target, duration, onComplete) {
+      function animateArrangeDrag(source, target, center, duration, onComplete) {
         const startedAt = window.performance.now();
 
         function frame(now) {
@@ -718,7 +736,7 @@
             elapsed < 0.5
               ? 2 * elapsed * elapsed
               : 1 - Math.pow(-2 * elapsed + 2, 2) / 2;
-          const point = pointOnDragArc(source, target, progress);
+          const point = pointOnDragArc(source, target, center, progress);
           demoPointer.style.left = `${point.left}px`;
           demoPointer.style.top = `${point.top}px`;
           dispatchDragEvent(document, "pointermove", point, 1);
@@ -747,7 +765,8 @@
           const [sourceID, targetID] = swaps[arrangeStep % swaps.length];
           const source = slotPoint(sourceID);
           const target = slotPoint(targetID);
-          if (!source || !target) {
+          const center = radialCenterPoint();
+          if (!source || !target || !center) {
             scheduleArrangeDemo(500);
             return;
           }
@@ -762,13 +781,15 @@
             document.body.classList.add("oa-demo-arrange-drag");
             dispatchDragEvent(source.slot, "pointerdown", source, 1);
             demoPointer.classList.add("is-arrived", "is-dragging");
-            animateArrangeDrag(source, target, 1120, () => {
-              dispatchDragEvent(document, "pointerup", target, 0);
-              document.body.classList.remove("oa-demo-arrange-drag");
-              demoPointer.classList.remove("is-dragging");
-              demoPointer.classList.add("is-arrived");
-              arrangeStep = (arrangeStep + 1) % swaps.length;
-              later(() => scheduleArrangeDemo(0), 1450);
+            animateArrangeDrag(source, target, center, 1120, () => {
+              later(() => {
+                dispatchDragEvent(document, "pointerup", target, 0);
+                document.body.classList.remove("oa-demo-arrange-drag");
+                demoPointer.classList.remove("is-dragging");
+                demoPointer.classList.add("is-arrived");
+                arrangeStep = (arrangeStep + 1) % swaps.length;
+                later(() => scheduleArrangeDemo(0), 1450);
+              }, dropSettleDelay);
             });
           }, 420);
         }, delay);

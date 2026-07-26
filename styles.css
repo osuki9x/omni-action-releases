@@ -549,7 +549,7 @@ img {
 
 .tour-builder-frame {
   overflow: hidden;
-  padding: 1px;
+  padding: 1.5px;
   border-radius: clamp(5px, 1.25vw, 15px);
   background: linear-gradient(
     135deg,
@@ -566,7 +566,7 @@ img {
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: calc(clamp(5px, 1.25vw, 15px) - 1px);
+  border-radius: calc(clamp(5px, 1.25vw, 15px) - 1.5px);
   object-fit: cover;
   object-position: center;
   filter: saturate(0.98) contrast(1.015);
@@ -579,7 +579,7 @@ img {
     #030304;
 }
 
-.tour-radial-crop > .oa-demo-radial {
+.tour-radial-crop > .oa-demo-radial[data-compact] {
   position: absolute;
   top: 40%;
   left: -28%;
