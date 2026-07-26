@@ -425,44 +425,50 @@ img {
     linear-gradient(
         90deg,
         transparent 0%,
-        rgba(var(--oa-accent-rgb), 0.15) 10%,
-        rgba(var(--oa-accent-rgb), 0.62) 34%,
-        rgba(210, 164, 255, 0.94) 44%,
-        rgba(255, 255, 255, 1) 49%,
-        rgba(255, 255, 255, 1) 51%,
-        rgba(210, 164, 255, 0.94) 56%,
-        rgba(var(--oa-accent-rgb), 0.62) 66%,
-        rgba(var(--oa-accent-rgb), 0.15) 90%,
+        rgba(var(--oa-accent-rgb), 0.14) 8%,
+        rgba(var(--oa-accent-rgb), 0.5) 27%,
+        rgba(210, 164, 255, 0.82) 39%,
+        rgba(246, 234, 255, 0.98) 46%,
+        rgba(255, 255, 255, 1) 48.5%,
+        rgba(255, 255, 255, 1) 51.5%,
+        rgba(246, 234, 255, 0.98) 54%,
+        rgba(210, 164, 255, 0.82) 61%,
+        rgba(var(--oa-accent-rgb), 0.5) 73%,
+        rgba(var(--oa-accent-rgb), 0.14) 92%,
         transparent 100%
       )
-      50% 0 / 84% 1.5px no-repeat,
+      50% 0 / 86% 2px no-repeat,
     linear-gradient(
         90deg,
         transparent 0%,
-        rgba(var(--oa-accent-rgb), 0.13) 10%,
-        rgba(var(--oa-accent-rgb), 0.54) 34%,
-        rgba(210, 164, 255, 0.84) 44%,
-        rgba(255, 255, 255, 0.94) 49%,
-        rgba(255, 255, 255, 0.94) 51%,
-        rgba(210, 164, 255, 0.84) 56%,
-        rgba(var(--oa-accent-rgb), 0.54) 66%,
-        rgba(var(--oa-accent-rgb), 0.13) 90%,
+        rgba(var(--oa-accent-rgb), 0.12) 8%,
+        rgba(var(--oa-accent-rgb), 0.44) 27%,
+        rgba(210, 164, 255, 0.74) 39%,
+        rgba(246, 234, 255, 0.91) 46%,
+        rgba(255, 255, 255, 0.96) 48.5%,
+        rgba(255, 255, 255, 0.96) 51.5%,
+        rgba(246, 234, 255, 0.91) 54%,
+        rgba(210, 164, 255, 0.74) 61%,
+        rgba(var(--oa-accent-rgb), 0.44) 73%,
+        rgba(var(--oa-accent-rgb), 0.12) 92%,
         transparent 100%
       )
-      50% 100% / 84% 1.5px no-repeat,
+      50% 100% / 86% 2px no-repeat,
     radial-gradient(
-      ellipse 42% 10px at 50% 0%,
-      rgba(255, 255, 255, 0.22) 0%,
-      rgba(210, 164, 255, 0.42) 22%,
-      rgba(var(--oa-accent-rgb), 0.28) 48%,
-      transparent 78%
+      ellipse 54% 14px at 50% 0%,
+      rgba(255, 255, 255, 0.27) 0%,
+      rgba(210, 164, 255, 0.48) 24%,
+      rgba(var(--oa-accent-rgb), 0.3) 52%,
+      rgba(var(--oa-accent-rgb), 0.1) 68%,
+      transparent 82%
     ),
     radial-gradient(
-      ellipse 42% 10px at 50% 100%,
-      rgba(255, 255, 255, 0.18) 0%,
-      rgba(210, 164, 255, 0.36) 22%,
-      rgba(var(--oa-accent-rgb), 0.24) 48%,
-      transparent 78%
+      ellipse 54% 14px at 50% 100%,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(210, 164, 255, 0.42) 24%,
+      rgba(var(--oa-accent-rgb), 0.27) 52%,
+      rgba(var(--oa-accent-rgb), 0.09) 68%,
+      transparent 82%
     );
   filter: blur(0.25px);
   transform: scale3d(0.985, 0.99, 1);
