@@ -117,15 +117,6 @@
               data-product-tour
               aria-label="Omni Action product tour"
             >
-              <div class="tour-topbar">
-                <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
-                <div class="tour-title">
-                  <span class="tour-mark"><img src="assets/omni-action-mark.svg" alt="" /></span>
-                  <span>Omni Action</span>
-                </div>
-                <span class="version-chip" data-version-short>v3.1</span>
-              </div>
-
               <div class="tour-tabs" role="tablist" aria-label="Product tour views">
                 <button
                   id="tour-tab-build"
@@ -179,6 +170,7 @@
                     decoding="async"
                   />
                   <figcaption>
+                    <small>REAL BUILDER</small>
                     <strong>Build a readable macro.</strong>
                     <span>Every row is one action you can inspect and change.</span>
                   </figcaption>
@@ -201,6 +193,7 @@
                     decoding="async"
                   />
                   <figcaption>
+                    <small>REAL WORKSPACE</small>
                     <strong>Keep actions close.</strong>
                     <span>Assign a shortcut or place a macro in the radial menu.</span>
                   </figcaption>
@@ -215,7 +208,6 @@
                   hidden
                 >
                   <div class="tour-radial-stage">
-                    <span class="tour-orbit" aria-hidden="true"></span>
                     <img
                       src="assets/shots/radial-menu.png"
                       alt="The real Omni Action radial menu with eight assigned actions."
@@ -224,12 +216,9 @@
                       loading="lazy"
                       decoding="async"
                     />
-                    <div class="run-notice" aria-hidden="true">
-                      <i>✓</i>
-                      <span>Macro completed</span>
-                    </div>
                   </div>
                   <figcaption>
+                    <small>REAL RADIAL MENU</small>
                     <strong>Run without leaving the work.</strong>
                     <span>One trigger replaces the sequence you would repeat by hand.</span>
                   </figcaption>
@@ -275,7 +264,8 @@
                   <li><span>✓</span> Import and export JSON</li>
                 </ul>
               </div>
-              <div class="real-ui-frame real-ui-frame--builder">
+              <div class="real-ui-fragment real-ui-fragment--builder">
+                <span class="fragment-label">STEP TIMELINE · REAL BUILDER UI</span>
                 <img
                   src="assets/shots/builder-editor.png"
                   alt="A close view of the real Omni Action step timeline."
@@ -284,11 +274,6 @@
                   loading="lazy"
                   decoding="async"
                 />
-                <div class="frame-callout" aria-hidden="true">
-                  <span>6</span>
-                  <b>Input</b>
-                  <small>“Reverb” → captured search field</small>
-                </div>
               </div>
             </article>
 
@@ -306,7 +291,7 @@
                 </div>
               </div>
               <div class="radial-feature-visual">
-                <span class="radial-guide" aria-hidden="true"></span>
+                <span class="fragment-label">RUNTIME MENU · REAL UI</span>
                 <img
                   src="assets/shots/radial-menu.png"
                   alt="The real Omni Action radial menu."
@@ -315,8 +300,6 @@
                   loading="lazy"
                   decoding="async"
                 />
-                <span class="radial-pointer" aria-hidden="true"></span>
-                <span class="radial-name" aria-hidden="true">Audio Reverb</span>
               </div>
             </article>
 
@@ -377,21 +360,27 @@
           <div class="workflow-grid">
             <article class="workflow-card reveal">
               <span class="workflow-number">01</span>
-              <div class="workflow-icon">≡</div>
+              <div class="workflow-icon">
+                <img src="assets/builder-icons/macro.svg" alt="" />
+              </div>
               <h3>Build</h3>
               <p>Describe the sequence as steps you can read, reorder, and test.</p>
               <span class="workflow-caption">Commands · Keys · Text · Mouse · Targets</span>
             </article>
             <article class="workflow-card reveal">
               <span class="workflow-number">02</span>
-              <div class="workflow-icon">◎</div>
+              <div class="workflow-icon">
+                <img src="assets/builder-icons/radial.svg" alt="" />
+              </div>
               <h3>Assign</h3>
               <p>Give the macro a shortcut or a place in the radial menu.</p>
               <span class="workflow-caption">Shortcut · Radial Menu · Builder</span>
             </article>
             <article class="workflow-card reveal">
               <span class="workflow-number">03</span>
-              <div class="workflow-icon">▶</div>
+              <div class="workflow-icon">
+                <img src="assets/builder-icons/play.svg" alt="" />
+              </div>
               <h3>Run</h3>
               <p>Trigger the sequence, see the result, and refine only when needed.</p>
               <span class="workflow-caption">Test · Run · Adjust</span>
@@ -408,22 +397,22 @@
           </div>
           <div class="step-type-grid">
             <article class="step-type step-type--violet reveal">
-              <span>⌘</span><div><h3>App Command</h3><p>Choose a command supplied by the active integration.</p></div>
+              <span><img src="assets/builder-icons/step-command.svg" alt="" /></span><div><h3>App Command</h3><p>Choose a command supplied by the active integration.</p></div>
             </article>
             <article class="step-type step-type--green reveal">
-              <span>◉</span><div><h3>Silent Action</h3><p>Press a captured interface control without moving the cursor.</p></div>
+              <span><img src="assets/builder-icons/step-silent.svg" alt="" /></span><div><h3>Silent Action</h3><p>Press a captured interface control without moving the cursor.</p></div>
             </article>
             <article class="step-type step-type--blue reveal">
-              <span>⌨</span><div><h3>Keyboard</h3><p>Send a key or key combination.</p></div>
+              <span><img src="assets/builder-icons/step-keyboard.svg" alt="" /></span><div><h3>Keyboard</h3><p>Send a key or key combination.</p></div>
             </article>
             <article class="step-type step-type--amber reveal">
-              <span>◷</span><div><h3>Pause</h3><p>Wait when the interface needs time to catch up.</p></div>
+              <span><img src="assets/builder-icons/step-pause.svg" alt="" /></span><div><h3>Pause</h3><p>Wait when the interface needs time to catch up.</p></div>
             </article>
             <article class="step-type step-type--pink reveal">
-              <span>T</span><div><h3>Input</h3><p>Enter text or a value into a captured field.</p></div>
+              <span><img src="assets/builder-icons/step-input.svg" alt="" /></span><div><h3>Input</h3><p>Enter text or a value into a captured field.</p></div>
             </article>
             <article class="step-type step-type--teal reveal">
-              <span>↖</span><div><h3>Mouse</h3><p>Move, click, or drag at a control or screen point.</p></div>
+              <span><img src="assets/builder-icons/step-mouse.svg" alt="" /></span><div><h3>Mouse</h3><p>Move, click, or drag at a control or screen point.</p></div>
             </article>
           </div>
         </div>
@@ -447,7 +436,9 @@
 
           <article class="integration-card reveal">
             <div class="integration-card__top">
-              <span class="integration-symbol">R</span>
+              <span class="integration-symbol">
+                <img src="assets/app-icons/davinci-resolve.png" alt="" />
+              </span>
               <span>
                 <small>SUPPORTED TODAY</small>
                 <h3>DaVinci Resolve</h3>
@@ -479,7 +470,9 @@
             <article class="install-card install-card--recommended reveal">
               <div class="recommendation">RECOMMENDED</div>
               <div class="install-card-top">
-                <span class="install-icon">⌁</span>
+                <span class="install-icon install-icon--app">
+                  <img src="assets/app-icons/shortcuts.png" alt="" />
+                </span>
                 <span>
                   <small>OPTION 1</small>
                   <h3>Apple Shortcut</h3>
@@ -503,7 +496,9 @@
 
             <article class="install-card reveal">
               <div class="install-card-top">
-                <span class="install-icon install-icon--terminal">&gt;_</span>
+                <span class="install-icon install-icon--app">
+                  <img src="assets/app-icons/terminal.png" alt="" />
+                </span>
                 <span>
                   <small>OPTION 2</small>
                   <h3>Terminal</h3>
@@ -534,15 +529,19 @@
 
           <div class="requirements reveal">
             <div>
-              <span class="requirement-icon">●</span>
+              <span class="requirement-icon requirement-icon--mac"></span>
               <span><strong>macOS</strong><small>Apple silicon or Intel</small></span>
             </div>
             <div>
-              <span class="requirement-icon requirement-icon--violet">H</span>
+              <span class="requirement-icon requirement-icon--app">
+                <img src="assets/app-icons/hammerspoon.png" alt="" />
+              </span>
               <span><strong>Hammerspoon</strong><small>Installed automatically by Terminal</small></span>
             </div>
             <div>
-              <span class="requirement-icon requirement-icon--orange">R</span>
+              <span class="requirement-icon requirement-icon--app">
+                <img src="assets/app-icons/davinci-resolve.png" alt="" />
+              </span>
               <span><strong>DaVinci Resolve</strong><small>Current supported integration</small></span>
             </div>
             <div>

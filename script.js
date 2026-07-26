@@ -27,12 +27,6 @@ if ("IntersectionObserver" in window) {
   for (const element of revealElements) {
     revealObserver.observe(element);
   }
-
-  window.setTimeout(() => {
-    for (const element of revealElements) {
-      element.classList.add("is-visible");
-    }
-  }, 2600);
 } else {
   for (const element of revealElements) {
     element.classList.add("is-visible");
