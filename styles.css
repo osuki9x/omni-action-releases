@@ -539,6 +539,7 @@ img {
 }
 
 .tour-panel > img,
+.tour-builder-frame,
 .tour-radial-crop,
 .tour-panel > .oa-demo-radial {
   position: relative;
@@ -546,7 +547,26 @@ img {
   aspect-ratio: 2400 / 1329;
 }
 
+.tour-builder-frame {
+  overflow: hidden;
+  padding: 1px;
+  border-radius: clamp(5px, 1.25vw, 15px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16),
+    rgba(140, 31, 255, 0.2) 48%,
+    rgba(255, 255, 255, 0.055)
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.025),
+    0 0 24px -18px rgba(140, 31, 255, 0.7);
+}
+
 .tour-builder-window {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(clamp(5px, 1.25vw, 15px) - 1px);
   object-fit: cover;
   object-position: center;
   filter: saturate(0.98) contrast(1.015);
@@ -561,11 +581,10 @@ img {
 
 .tour-radial-crop > .oa-demo-radial {
   position: absolute;
-  top: 28%;
-  left: 50%;
+  top: 40%;
+  left: -28%;
   width: 156%;
   max-width: none;
-  transform: translateX(-50%);
 }
 
 .tour-radial-crop [data-demo-locked] {

@@ -2098,6 +2098,9 @@
       replay() {
         openPreview();
       },
+      close() {
+        closePreview();
+      },
       update(nextPayload) {
         nextPayload = nextPayload || {};
         if (nextPayload.config) {

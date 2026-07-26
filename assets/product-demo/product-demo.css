@@ -727,6 +727,9 @@
     drop-shadow(0 3px 4px rgba(0, 0, 0, 0.72))
     drop-shadow(0 0 10px rgba(255, 122, 24, 0.42));
   transform: translate(-3px, -3px) scale(0.78);
+  transition:
+    opacity 180ms ease,
+    transform 220ms var(--oa-ease-fluid);
 }
 
 .oa-demo-radial__pointer svg {

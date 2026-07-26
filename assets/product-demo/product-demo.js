@@ -482,6 +482,14 @@
     if (mode === "arrange") {
       liveConfig = {
         ...liveConfig,
+        submenuIndicator: {
+          ...liveConfig.submenuIndicator,
+          enabled: false,
+        },
+        items: liveConfig.items.map((item) => ({
+          ...item,
+          submenu: [],
+        })),
         settings: {
           ...liveConfig.settings,
           mainSize: 62,
@@ -504,6 +512,7 @@
       };
     }
     let radialDemoTimer = 0;
+    let radialPointerTimer = 0;
     let radialDemoPhase = 0;
     let radialDemoInView = !("IntersectionObserver" in window);
     replay.type = "button";
@@ -556,6 +565,7 @@
       const swaps = [["main.speed", "main.color"]];
       const arrangeTimers = new Set();
       let arrangeStep = 0;
+      let arrangeFrameID = 0;
       const syntheticPointerID = 91;
 
       function later(callback, delay) {
@@ -569,6 +579,10 @@
       function clearArrangeTimers() {
         arrangeTimers.forEach((timerID) => window.clearTimeout(timerID));
         arrangeTimers.clear();
+        if (arrangeFrameID) {
+          window.cancelAnimationFrame(arrangeFrameID);
+          arrangeFrameID = 0;
+        }
       }
 
       function clearArrangeVisuals() {
@@ -672,9 +686,20 @@
         );
       }
 
-      function interpolatePoint(source, target, progress) {
-        const clientX = source.clientX + (target.clientX - source.clientX) * progress;
-        const clientY = source.clientY + (target.clientY - source.clientY) * progress;
+      function pointOnDragArc(source, target, progress) {
+        const controlX = (source.clientX + target.clientX) / 2;
+        const controlY =
+          Math.min(source.clientY, target.clientY) -
+          Math.max(78, Math.abs(target.clientX - source.clientX) * 0.2);
+        const inverse = 1 - progress;
+        const clientX =
+          inverse * inverse * source.clientX +
+          2 * inverse * progress * controlX +
+          progress * progress * target.clientX;
+        const clientY =
+          inverse * inverse * source.clientY +
+          2 * inverse * progress * controlY +
+          progress * progress * target.clientY;
         const rootRect = root.getBoundingClientRect();
         return {
           clientX,
@@ -682,6 +707,32 @@
           left: clientX - rootRect.left + 10,
           top: clientY - rootRect.top + 8,
         };
+      }
+
+      function animateArrangeDrag(source, target, duration, onComplete) {
+        const startedAt = window.performance.now();
+
+        function frame(now) {
+          const elapsed = Math.min(1, (now - startedAt) / duration);
+          const progress =
+            elapsed < 0.5
+              ? 2 * elapsed * elapsed
+              : 1 - Math.pow(-2 * elapsed + 2, 2) / 2;
+          const point = pointOnDragArc(source, target, progress);
+          demoPointer.style.left = `${point.left}px`;
+          demoPointer.style.top = `${point.top}px`;
+          dispatchDragEvent(document, "pointermove", point, 1);
+
+          if (elapsed < 1) {
+            arrangeFrameID = window.requestAnimationFrame(frame);
+            return;
+          }
+
+          arrangeFrameID = 0;
+          onComplete();
+        }
+
+        arrangeFrameID = window.requestAnimationFrame(frame);
       }
 
       arrangeDropHandler = ({ slotID, targetSlotID }) => {
@@ -711,36 +762,15 @@
             document.body.classList.add("oa-demo-arrange-drag");
             dispatchDragEvent(source.slot, "pointerdown", source, 1);
             demoPointer.classList.add("is-arrived", "is-dragging");
+            animateArrangeDrag(source, target, 1120, () => {
+              dispatchDragEvent(document, "pointerup", target, 0);
+              document.body.classList.remove("oa-demo-arrange-drag");
+              demoPointer.classList.remove("is-dragging");
+              demoPointer.classList.add("is-arrived");
+              arrangeStep = (arrangeStep + 1) % swaps.length;
+              later(() => scheduleArrangeDemo(0), 1450);
+            });
           }, 420);
-
-          later(() => {
-            const point = interpolatePoint(source, target, 0.28);
-            demoPointer.style.left = `${point.left}px`;
-            demoPointer.style.top = `${point.top}px`;
-            dispatchDragEvent(document, "pointermove", point, 1);
-          }, 540);
-
-          later(() => {
-            const point = interpolatePoint(source, target, 0.64);
-            demoPointer.style.left = `${point.left}px`;
-            demoPointer.style.top = `${point.top}px`;
-            dispatchDragEvent(document, "pointermove", point, 1);
-          }, 760);
-
-          later(() => {
-            demoPointer.style.left = `${target.left}px`;
-            demoPointer.style.top = `${target.top}px`;
-            dispatchDragEvent(document, "pointermove", target, 1);
-          }, 1000);
-
-          later(() => {
-            dispatchDragEvent(document, "pointerup", target, 0);
-            document.body.classList.remove("oa-demo-arrange-drag");
-            demoPointer.classList.remove("is-dragging");
-            demoPointer.classList.add("is-arrived");
-            arrangeStep = (arrangeStep + 1) % swaps.length;
-            later(() => scheduleArrangeDemo(0), 1450);
-          }, 1580);
         }, delay);
       }
 
@@ -779,82 +809,127 @@
 
     let tourRunActive = !isTourRun;
     let tourRunOpenTimer = 0;
-    const radialDemoSequence = isTourRun
-      ? [
-          { slotID: "main.color", hold: 1900 },
-          { slotID: "sub.color.asset", hold: 2100 },
-        ]
-      : [
-          { slotID: "main.speed", hold: 1500 },
-          { slotID: "main.rough-cut", hold: 1800 },
-          { slotID: "sub.subtitle", hold: 1600 },
-          { slotID: "main.color", hold: 1800 },
-          { slotID: "sub.color.asset", hold: 1700 },
-          { slotID: "main.reverb", hold: 1700 },
-        ];
+    const radialDemoSequence = [
+      { slotID: "main.speed", hold: 1500 },
+      { slotID: "main.rough-cut", hold: 1800 },
+      { slotID: "sub.subtitle", hold: 1600 },
+      { slotID: "main.color", hold: 1800 },
+      { slotID: "sub.color.asset", hold: 1700 },
+      { slotID: "main.reverb", hold: 1700 },
+    ];
+    const tourRunSequence = [
+      { slotID: "main.color", hold: 1050 },
+      { slotID: "sub.color.asset", hold: 1150 },
+      { close: true },
+    ];
 
     function clearSyntheticHover() {
+      window.clearTimeout(radialPointerTimer);
+      radialPointerTimer = 0;
       stage.dispatchEvent(new window.MouseEvent("mouseleave"));
       demoPointer.classList.remove("is-visible", "is-arrived");
+      delete demoPointer.dataset.slotId;
+    }
+
+    function canAutoAnimate() {
+      return (
+        !reducedMotion &&
+        radialDemoInView &&
+        tourRunActive &&
+        !root.matches(":hover") &&
+        !root.contains(document.activeElement)
+      );
+    }
+
+    function moveDemoPointer(slotID, onArrive) {
+      const slot = stage.querySelector(
+        `.radial-preview-slot[data-slot-id="${CSS.escape(slotID)}"]`,
+      );
+      if (!slot) return false;
+
+      const rootRect = root.getBoundingClientRect();
+      const slotRect = slot.getBoundingClientRect();
+      const clientX = slotRect.left + slotRect.width / 2;
+      const clientY = slotRect.top + slotRect.height / 2;
+      demoPointer.dataset.slotId = slotID;
+      demoPointer.style.left = `${clientX - rootRect.left}px`;
+      demoPointer.style.top = `${clientY - rootRect.top}px`;
+      demoPointer.classList.add("is-visible");
+      demoPointer.classList.remove("is-arrived");
+      window.clearTimeout(radialPointerTimer);
+      radialPointerTimer = window.setTimeout(() => {
+        radialPointerTimer = 0;
+        if (!canAutoAnimate()) return;
+        demoPointer.classList.add("is-arrived");
+        stage.dispatchEvent(
+          new window.MouseEvent("mousemove", { bubbles: true, clientX, clientY }),
+        );
+        onArrive?.();
+      }, 620);
+      return true;
     }
 
     function scheduleRadialDemo(delay = 1200) {
       window.clearTimeout(radialDemoTimer);
-      if (
-        reducedMotion ||
-        !radialDemoInView ||
-        !tourRunActive ||
-        root.matches(":hover") ||
-        root.contains(document.activeElement)
-      ) return;
+      if (!canAutoAnimate() || isTourRun) return;
       radialDemoTimer = window.setTimeout(() => {
         const phase = radialDemoSequence[radialDemoPhase % radialDemoSequence.length];
-        const slot = stage.querySelector(
-          `.radial-preview-slot[data-slot-id="${CSS.escape(phase.slotID)}"]`,
-        );
-        if (!slot) {
+        if (!moveDemoPointer(phase.slotID, () => {
+          radialDemoPhase += 1;
+          scheduleRadialDemo(phase.hold);
+        })) {
           scheduleRadialDemo(500);
+        }
+      }, delay);
+    }
+
+    function scheduleTourRunPhase(delay = 0) {
+      window.clearTimeout(radialDemoTimer);
+      if (!isTourRun || !canAutoAnimate()) return;
+
+      radialDemoTimer = window.setTimeout(() => {
+        const phase = tourRunSequence[radialDemoPhase];
+
+        if (phase?.close) {
+          clearSyntheticHover();
+          instance.close();
+          radialDemoPhase = 0;
+          radialDemoTimer = window.setTimeout(() => {
+            if (!canAutoAnimate()) return;
+            root.classList.add("is-awaiting-open");
+            startTourRun();
+          }, 760);
           return;
         }
-        const rootRect = root.getBoundingClientRect();
-        const slotRect = slot.getBoundingClientRect();
-        const clientX = slotRect.left + slotRect.width / 2;
-        const clientY = slotRect.top + slotRect.height / 2;
-        demoPointer.dataset.slotId = phase.slotID;
-        demoPointer.style.left = `${clientX - rootRect.left}px`;
-        demoPointer.style.top = `${clientY - rootRect.top}px`;
-        demoPointer.classList.add("is-visible");
-        demoPointer.classList.remove("is-arrived");
-        window.setTimeout(() => {
-          if (!tourRunActive || !radialDemoInView || root.matches(":hover")) return;
-          demoPointer.classList.add("is-arrived");
-          stage.dispatchEvent(
-            new window.MouseEvent("mousemove", { bubbles: true, clientX, clientY }),
-          );
-        }, 620);
-        radialDemoPhase += 1;
-        scheduleRadialDemo(phase.hold + 620);
+
+        if (!phase || !moveDemoPointer(phase.slotID, () => {
+          radialDemoPhase += 1;
+          scheduleTourRunPhase(phase.hold);
+        })) {
+          scheduleTourRunPhase(400);
+        }
       }, delay);
     }
 
     function startTourRun() {
-      if (!isTourRun || reducedMotion || !tourRunActive || !radialDemoInView) return;
+      if (!isTourRun || !canAutoAnimate()) return;
       window.clearTimeout(tourRunOpenTimer);
       window.clearTimeout(radialDemoTimer);
       clearSyntheticHover();
       radialDemoPhase = 0;
       root.classList.add("is-awaiting-open");
       tourRunOpenTimer = window.setTimeout(() => {
-        if (!tourRunActive || !radialDemoInView) return;
+        if (!canAutoAnimate()) return;
         instance.replay();
         root.classList.remove("is-awaiting-open");
-        scheduleRadialDemo(1180);
+        scheduleTourRunPhase(980);
       }, 360);
     }
 
     function stopTourRun() {
       window.clearTimeout(tourRunOpenTimer);
       window.clearTimeout(radialDemoTimer);
+      window.clearTimeout(radialPointerTimer);
       clearSyntheticHover();
       if (isTourRun) root.classList.add("is-awaiting-open");
     }
@@ -870,15 +945,22 @@
 
     root.addEventListener("pointerenter", () => {
       window.clearTimeout(radialDemoTimer);
+      window.clearTimeout(radialPointerTimer);
       clearSyntheticHover();
     });
     root.addEventListener("pointerleave", () => {
       radialDemoPhase = 0;
-      scheduleRadialDemo(isTourRun ? 1050 : 900);
+      if (isTourRun) startTourRun();
+      else scheduleRadialDemo(900);
     });
-    root.addEventListener("focusin", () => window.clearTimeout(radialDemoTimer));
+    root.addEventListener("focusin", () => {
+      window.clearTimeout(radialDemoTimer);
+      window.clearTimeout(radialPointerTimer);
+    });
     root.addEventListener("focusout", () => window.setTimeout(() => {
-      if (!root.contains(document.activeElement)) scheduleRadialDemo(900);
+      if (root.contains(document.activeElement)) return;
+      if (isTourRun) startTourRun();
+      else scheduleRadialDemo(900);
     }, 0));
 
     if (isTourRun) {
@@ -913,6 +995,7 @@
               if (isTourRun) stopTourRun();
               else {
                 window.clearTimeout(radialDemoTimer);
+                window.clearTimeout(radialPointerTimer);
                 clearSyntheticHover();
               }
             }
