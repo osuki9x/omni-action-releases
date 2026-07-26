@@ -1475,15 +1475,15 @@ img {
 
 .step-type.is-visible::after {
   animation:
-    step-edge-motion 1.16s var(--step-edge-delay) linear both,
-    step-edge-visibility 1.16s var(--step-edge-delay) linear both;
+    step-edge-motion 1.24s var(--step-edge-delay) linear both,
+    step-edge-visibility 1.24s var(--step-edge-delay) linear both;
 }
 
-.step-type:nth-child(2) { --step-edge-delay: 305ms; }
-.step-type:nth-child(3) { --step-edge-delay: 430ms; }
-.step-type:nth-child(4) { --step-edge-delay: 555ms; }
-.step-type:nth-child(5) { --step-edge-delay: 680ms; }
-.step-type:nth-child(6) { --step-edge-delay: 805ms; }
+.step-type:nth-child(2) { --step-edge-delay: 1230ms; }
+.step-type:nth-child(3) { --step-edge-delay: 2280ms; }
+.step-type:nth-child(4) { --step-edge-delay: 3330ms; }
+.step-type:nth-child(5) { --step-edge-delay: 4380ms; }
+.step-type:nth-child(6) { --step-edge-delay: 5430ms; }
 
 .step-type:hover {
   border-color: rgba(var(--step-rgb), 0.34);
@@ -2276,56 +2276,56 @@ footer {
  * A conic sweep does not move at a constant visual speed around a rectangle.
  * These stops map evenly spaced perimeter positions to their corresponding
  * angles for the step-card aspect ratio, beginning at the upper-left corner.
- * Their timeline follows p = t^1.5, creating one continuous ease-in across
+ * Their timeline follows p = t^1.25, creating one continuous ease-in across
  * the whole lap without restarting the easing at each geometry correction.
  */
 @keyframes step-edge-motion {
   0% {
     --oa-edge-angle: -45.3deg;
   }
-  21.2% {
+  15.54% {
     --oa-edge-angle: -31.7deg;
   }
-  33.65% {
+  27.06% {
     --oa-edge-angle: 29deg;
   }
-  44.09% {
+  37.43% {
     --oa-edge-angle: 89.7deg;
   }
-  53.43% {
+  47.13% {
     --oa-edge-angle: 103.3deg;
   }
-  55.89% {
+  49.75% {
     --oa-edge-angle: 111deg;
   }
-  58.3% {
+  52.34% {
     --oa-edge-angle: 119deg;
   }
-  60.67% {
+  54.9% {
     --oa-edge-angle: 127deg;
   }
-  63% {
+  57.43% {
     --oa-edge-angle: 134.7deg;
   }
-  70.95% {
+  66.24% {
     --oa-edge-angle: 148.3deg;
   }
-  78.48% {
+  74.76% {
     --oa-edge-angle: 209deg;
   }
-  85.66% {
+  83.05% {
     --oa-edge-angle: 269.7deg;
   }
-  92.56% {
+  91.14% {
     --oa-edge-angle: 283.3deg;
   }
-  94.44% {
+  93.37% {
     --oa-edge-angle: 291deg;
   }
-  96.31% {
+  95.59% {
     --oa-edge-angle: 299deg;
   }
-  98.16% {
+  97.8% {
     --oa-edge-angle: 307deg;
   }
   100% {
