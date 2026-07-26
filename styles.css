@@ -1479,11 +1479,11 @@ img {
     step-edge-visibility 1.16s var(--step-edge-delay) linear both;
 }
 
-.step-type:nth-child(2) { --step-edge-delay: 270ms; }
-.step-type:nth-child(3) { --step-edge-delay: 360ms; }
-.step-type:nth-child(4) { --step-edge-delay: 450ms; }
-.step-type:nth-child(5) { --step-edge-delay: 540ms; }
-.step-type:nth-child(6) { --step-edge-delay: 630ms; }
+.step-type:nth-child(2) { --step-edge-delay: 305ms; }
+.step-type:nth-child(3) { --step-edge-delay: 430ms; }
+.step-type:nth-child(4) { --step-edge-delay: 555ms; }
+.step-type:nth-child(5) { --step-edge-delay: 680ms; }
+.step-type:nth-child(6) { --step-edge-delay: 805ms; }
 
 .step-type:hover {
   border-color: rgba(var(--step-rgb), 0.34);
@@ -2276,54 +2276,56 @@ footer {
  * A conic sweep does not move at a constant visual speed around a rectangle.
  * These stops map evenly spaced perimeter positions to their corresponding
  * angles for the step-card aspect ratio, beginning at the upper-left corner.
+ * Their timeline follows p = t^1.5, creating one continuous ease-in across
+ * the whole lap without restarting the easing at each geometry correction.
  */
 @keyframes step-edge-motion {
   0% {
     --oa-edge-angle: -45.3deg;
   }
-  9.76% {
+  21.2% {
     --oa-edge-angle: -31.7deg;
   }
-  19.52% {
+  33.65% {
     --oa-edge-angle: 29deg;
   }
-  29.28% {
+  44.09% {
     --oa-edge-angle: 89.7deg;
   }
-  39.05% {
+  53.43% {
     --oa-edge-angle: 103.3deg;
   }
-  41.78% {
+  55.89% {
     --oa-edge-angle: 111deg;
   }
-  44.52% {
+  58.3% {
     --oa-edge-angle: 119deg;
   }
-  47.26% {
+  60.67% {
     --oa-edge-angle: 127deg;
   }
-  50% {
+  63% {
     --oa-edge-angle: 134.7deg;
   }
-  59.76% {
+  70.95% {
     --oa-edge-angle: 148.3deg;
   }
-  69.52% {
+  78.48% {
     --oa-edge-angle: 209deg;
   }
-  79.28% {
+  85.66% {
     --oa-edge-angle: 269.7deg;
   }
-  89.05% {
+  92.56% {
     --oa-edge-angle: 283.3deg;
   }
-  91.78% {
+  94.44% {
     --oa-edge-angle: 291deg;
   }
-  94.52% {
+  96.31% {
     --oa-edge-angle: 299deg;
   }
-  97.26% {
+  98.16% {
     --oa-edge-angle: 307deg;
   }
   100% {
@@ -2335,10 +2337,10 @@ footer {
   0% {
     opacity: 0;
   }
-  7% {
+  9% {
     opacity: 1;
   }
-  90% {
+  92% {
     opacity: 1;
   }
   100% {
