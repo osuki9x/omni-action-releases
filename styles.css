@@ -1,3 +1,9 @@
+@property --oa-edge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -45.3deg;
+}
+
 :root {
   --oa-color-black-0: #040405;
   --oa-color-black-1: #08090b;
@@ -1413,6 +1419,7 @@ img {
 .step-type {
   --step-rgb: 154, 83, 255;
   --step-edge-delay: 180ms;
+  --oa-edge-angle: -45.3deg;
   position: relative;
   isolation: isolate;
   display: flex;
@@ -1433,74 +1440,43 @@ img {
     transform 180ms var(--oa-ease-fluid);
 }
 
-.step-type::before,
-.step-type::after {
+.step-type::before {
   content: none;
 }
 
-.step-type__edge-highlight {
+.step-type::after {
   position: absolute;
   inset: -1px;
-  z-index: 2;
-  display: block;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  overflow: visible;
   pointer-events: none;
   border-radius: inherit;
-}
-
-.step-type__edge-segment {
-  --step-edge-opacity: 1;
-  --step-edge-start: 0;
-  --step-edge-end: -100;
-  fill: none;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--oa-edge-angle),
+    transparent 0deg,
+    transparent 268deg,
+    rgba(var(--step-rgb), 0.1) 294deg,
+    rgba(var(--step-rgb), 0.82) 320deg,
+    rgba(255, 255, 255, 0.92) 331deg,
+    rgba(var(--step-rgb), 0.58) 341deg,
+    transparent 360deg
+  );
+  content: "";
+  filter: drop-shadow(0 0 5px rgba(var(--step-rgb), 0.28));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
   opacity: 0;
-  stroke: rgb(var(--step-rgb));
-  stroke-dasharray: 1 99;
-  stroke-dashoffset: var(--step-edge-start);
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
 }
 
-.step-type__edge-segment.is-outer {
-  --step-edge-opacity: 0.22;
-  --step-edge-start: 27;
-  --step-edge-end: -73;
-  stroke-width: 4;
-  stroke-dasharray: 27 73;
-  filter: drop-shadow(0 0 7px rgba(var(--step-rgb), 0.34));
-}
-
-.step-type__edge-segment.is-tail {
-  --step-edge-opacity: 0.42;
-  --step-edge-start: 19;
-  --step-edge-end: -81;
-  stroke-width: 2.5;
-  stroke-dasharray: 19 81;
-}
-
-.step-type__edge-segment.is-core {
-  --step-edge-opacity: 0.86;
-  --step-edge-start: 10;
-  --step-edge-end: -90;
-  stroke-width: 1.35;
-  stroke-dasharray: 10 90;
-}
-
-.step-type__edge-segment.is-head {
-  --step-edge-start: 0.8;
-  --step-edge-end: -99.2;
-  stroke: rgba(255, 255, 255, 0.98);
-  stroke-width: 2;
-  stroke-dasharray: 0.8 99.2;
-  filter:
-    drop-shadow(0 0 3px rgba(255, 255, 255, 0.72))
-    drop-shadow(0 0 6px rgba(var(--step-rgb), 0.72));
-}
-
-.step-type.is-visible .step-type__edge-segment {
-  animation: step-edge-highlight 1.16s var(--step-edge-delay) linear both;
+.step-type.is-visible::after {
+  animation:
+    step-edge-motion 1.16s var(--step-edge-delay) linear both,
+    step-edge-visibility 1.16s var(--step-edge-delay) linear both;
 }
 
 .step-type:nth-child(2) { --step-edge-delay: 270ms; }
@@ -2296,19 +2272,76 @@ footer {
   }
 }
 
-@keyframes step-edge-highlight {
+/*
+ * A conic sweep does not move at a constant visual speed around a rectangle.
+ * These stops map evenly spaced perimeter positions to their corresponding
+ * angles for the step-card aspect ratio, beginning at the upper-left corner.
+ */
+@keyframes step-edge-motion {
   0% {
-    stroke-dashoffset: var(--step-edge-start);
+    --oa-edge-angle: -45.3deg;
+  }
+  9.76% {
+    --oa-edge-angle: -31.7deg;
+  }
+  19.52% {
+    --oa-edge-angle: 29deg;
+  }
+  29.28% {
+    --oa-edge-angle: 89.7deg;
+  }
+  39.05% {
+    --oa-edge-angle: 103.3deg;
+  }
+  41.78% {
+    --oa-edge-angle: 111deg;
+  }
+  44.52% {
+    --oa-edge-angle: 119deg;
+  }
+  47.26% {
+    --oa-edge-angle: 127deg;
+  }
+  50% {
+    --oa-edge-angle: 134.7deg;
+  }
+  59.76% {
+    --oa-edge-angle: 148.3deg;
+  }
+  69.52% {
+    --oa-edge-angle: 209deg;
+  }
+  79.28% {
+    --oa-edge-angle: 269.7deg;
+  }
+  89.05% {
+    --oa-edge-angle: 283.3deg;
+  }
+  91.78% {
+    --oa-edge-angle: 291deg;
+  }
+  94.52% {
+    --oa-edge-angle: 299deg;
+  }
+  97.26% {
+    --oa-edge-angle: 307deg;
+  }
+  100% {
+    --oa-edge-angle: 314.7deg;
+  }
+}
+
+@keyframes step-edge-visibility {
+  0% {
     opacity: 0;
   }
   7% {
-    opacity: var(--step-edge-opacity);
+    opacity: 1;
   }
   90% {
-    opacity: var(--step-edge-opacity);
+    opacity: 1;
   }
   100% {
-    stroke-dashoffset: var(--step-edge-end);
     opacity: 0;
   }
 }
