@@ -137,21 +137,41 @@
 
     const body = document.createElement("div");
     body.className = "oa-demo-step__body";
-    body.innerHTML = `
-      <span>
-        <small>Action</small>
-        <strong>${step.detail}</strong>
-      </span>
-      <span class="oa-demo-step__field" aria-hidden="true"></span>
-    `;
+    if (step.type === "command") {
+      body.innerHTML = `
+        <div class="oa-demo-step-editor">
+          <span class="oa-demo-step-editor__label">Command</span>
+          <span class="oa-demo-step-editor__control">
+            <img src="${type.icon}" alt="" />
+            <span>Workspace › Show Inspector</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 5 5 5-5 5"></path></svg>
+          </span>
+        </div>
+        <span class="oa-demo-step-editor__status">Command ready</span>
+      `;
+    } else if (step.type === "axAction") {
+      body.innerHTML = `
+        <div class="oa-demo-step-editor">
+          <span class="oa-demo-step-editor__label">Interface target</span>
+          <span class="oa-demo-step-editor__control">
+            <span class="oa-demo-step-editor__target" aria-hidden="true"></span>
+            <span>Inspector › Stabilization › Stabilize</span>
+          </span>
+        </div>
+        <button class="oa-demo-step-editor__button" type="button">Capture</button>
+      `;
+    } else {
+      body.innerHTML = `
+        <div class="oa-demo-step-editor">
+          <span class="oa-demo-step-editor__label">Action</span>
+          <span class="oa-demo-step-editor__control">${step.detail}</span>
+        </div>
+      `;
+    }
 
     head.addEventListener("click", (event) => {
       if (event.target.closest("button")) return;
-      const next = !row.classList.contains("is-open");
-      row.parentElement
-        ?.querySelectorAll(".oa-demo-step.is-open")
-        .forEach((openRow) => openRow.classList.remove("is-open"));
-      row.classList.toggle("is-open", next);
+      callbacks?.toggle(step.id);
     });
 
     row.append(head, body);
@@ -163,6 +183,9 @@
     let steps = sampleSteps.slice(0, compact ? 4 : sampleSteps.length).map((step) => ({ ...step }));
     let draggedID = "";
     let pointerDrag = null;
+    let openStepID = compact ? "" : "select-effect";
+    let autoDemoTimer = 0;
+    const autoDemoSteps = ["select-effect", "open-inspector"];
     const dropIndicator = document.createElement("div");
     dropIndicator.className = "oa-demo-drop-indicator";
 
@@ -176,6 +199,30 @@
     list.className = "oa-demo-step-list";
     root.appendChild(list);
 
+    function setOpenStep(stepID, { restart = false } = {}) {
+      openStepID = stepID;
+      list.querySelectorAll(".oa-demo-step").forEach((row) => {
+        const isOpen = row.dataset.stepId === openStepID;
+        row.classList.toggle("is-open", isOpen);
+        row.classList.toggle("is-selected", isOpen);
+        row.classList.toggle("is-demo-using", isOpen);
+      });
+      if (restart) scheduleAutoDemo();
+    }
+
+    function scheduleAutoDemo() {
+      window.clearTimeout(autoDemoTimer);
+      if (compact || reducedMotion || root.matches(":hover") || root.contains(document.activeElement)) {
+        return;
+      }
+      autoDemoTimer = window.setTimeout(() => {
+        const currentIndex = autoDemoSteps.indexOf(openStepID);
+        const nextID = autoDemoSteps[(currentIndex + 1 + autoDemoSteps.length) % autoDemoSteps.length];
+        setOpenStep(nextID);
+        scheduleAutoDemo();
+      }, 4600);
+    }
+
     root.addEventListener("pointermove", (event) => {
       const row = event.target.closest(".oa-demo-step");
       if (!row) return;
@@ -188,11 +235,15 @@
       list.innerHTML = "";
       steps.forEach((step, index) => {
         const row = createStepRow(step, index, compact, {
+          toggle(stepID) {
+            setOpenStep(stepID, { restart: true });
+          },
           duplicate(stepID) {
             const sourceIndex = steps.findIndex((candidate) => candidate.id === stepID);
             if (sourceIndex < 0) return;
             const copy = { ...steps[sourceIndex], id: `${steps[sourceIndex].id}-${Date.now()}` };
             steps.splice(sourceIndex + 1, 0, copy);
+            openStepID = copy.id;
             render({ animateID: copy.id });
           },
           remove(stepID) {
@@ -200,12 +251,14 @@
             const sourceIndex = steps.findIndex((candidate) => candidate.id === stepID);
             if (sourceIndex < 0) return;
             steps.splice(sourceIndex, 1);
+            if (openStepID === stepID) openStepID = "";
             render();
           },
         });
         if (step.id === animateID) row.classList.add("is-entering");
         list.appendChild(row);
       });
+      setOpenStep(openStepID);
     }
 
     if (!compact) {
@@ -320,13 +373,20 @@
     }
 
     render();
+    if (!compact) {
+      root.addEventListener("pointerenter", () => window.clearTimeout(autoDemoTimer));
+      root.addEventListener("pointerleave", scheduleAutoDemo);
+      root.addEventListener("focusin", () => window.clearTimeout(autoDemoTimer));
+      root.addEventListener("focusout", () => window.setTimeout(scheduleAutoDemo, 0));
+      scheduleAutoDemo();
+    }
   }
 
   function rgba(red, green, blue, alpha) {
     return { red, green, blue, alpha };
   }
 
-  function radialItem(slotID, name, icon, submenu) {
+  function radialItem(slotID, name, icon, submenu, options) {
     return {
       slotID,
       name,
@@ -334,6 +394,7 @@
       image: `assets/product-demo/radial-icons/${icon}`,
       previewImage: `assets/product-demo/radial-icons/${icon}`,
       submenu: submenu || [],
+      ...(options || {}),
     };
   }
 
@@ -348,8 +409,17 @@
         radialItem("sub.subtitle", "Create Subtitles", "create-subtitles.svg"),
         radialItem("sub.silence", "Ripple Delete Silence", "ripple-delete.svg"),
       ]),
-      radialItem("main.color", "Clip Color", "clip-color.svg"),
-      radialItem("main.scale", "Scale Level", "scale-level.svg"),
+      radialItem("main.color", "Clip Color", "clip-color.svg", [
+        radialItem("sub.color.effect", "Effect", "clip-effect.svg"),
+        radialItem("sub.color.b-roll", "B-Roll", "clip-b-roll.svg"),
+        radialItem("sub.color.temp-vo", "Temp VO", "clip-temp-vo.svg"),
+        radialItem("sub.color.asset", "Asset", "clip-asset.svg"),
+      ]),
+      radialItem("main.scale", "Scale Level", "scale-level.svg", [
+        radialItem("sub.scale.1", "1.1×", "scale-level.svg"),
+        radialItem("sub.scale.2", "1.2×", "scale-level.svg"),
+        radialItem("sub.scale.3", "1.5×", "scale-level.svg"),
+      ]),
     ];
 
     const light = rgba(0.922, 0.922, 0.922, 0.902);
