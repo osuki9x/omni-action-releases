@@ -1,9 +1,3 @@
-@property --oa-edge-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
 :root {
   --oa-color-black-0: #040405;
   --oa-color-black-1: #08090b;
@@ -1418,7 +1412,6 @@ img {
 
 .step-type {
   --step-rgb: 154, 83, 255;
-  --oa-edge-angle: 0deg;
   position: relative;
   isolation: isolate;
   display: flex;
@@ -1441,72 +1434,45 @@ img {
 
 .step-type::after {
   position: absolute;
-  inset: -1px;
-  pointer-events: none;
-  border-radius: inherit;
-  padding: 1px;
-  background: conic-gradient(
-    from var(--oa-edge-angle),
-    transparent 0deg,
-    transparent 268deg,
-    rgba(var(--step-rgb), 0.1) 294deg,
-    rgba(var(--step-rgb), 0.82) 320deg,
-    rgba(255, 255, 255, 0.92) 331deg,
-    rgba(var(--step-rgb), 0.58) 341deg,
-    transparent 360deg
-  );
-  content: "";
-  filter: drop-shadow(0 0 5px rgba(var(--step-rgb), 0.28));
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  opacity: 0;
-}
-
-.step-type::before {
-  position: absolute;
   z-index: 2;
   top: -2px;
   left: -2px;
-  width: 6px;
-  height: 6px;
+  width: 24px;
+  height: 3px;
   pointer-events: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.96);
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--step-rgb), 0.12) 18%,
+    rgba(var(--step-rgb), 0.72) 68%,
+    rgba(255, 255, 255, 0.98) 100%
+  );
   box-shadow:
-    0 0 5px 1px rgba(var(--step-rgb), 0.78),
-    0 0 11px 2px rgba(var(--step-rgb), 0.28);
+    0 0 5px rgba(var(--step-rgb), 0.72),
+    0 0 11px rgba(var(--step-rgb), 0.3);
   content: "";
-  offset-anchor: center;
+  offset-anchor: 100% 50%;
   offset-distance: 0%;
   offset-path: border-box;
+  offset-rotate: auto;
   opacity: 0;
-  scale: 0.35;
+  scale: 0.45;
+}
+
+.step-type::before {
+  content: none;
 }
 
 .step-type.is-visible::after {
-  animation: step-edge-attention 2.45s 360ms linear both;
+  animation: step-edge-highlight 1.38s 220ms linear both;
 }
 
-.step-type.is-visible::before {
-  animation: step-edge-head 2.45s 360ms linear both;
-}
-
-.step-type:nth-child(2).is-visible::after,
-.step-type:nth-child(2).is-visible::before { animation-delay: 540ms; }
-.step-type:nth-child(3).is-visible::after,
-.step-type:nth-child(3).is-visible::before { animation-delay: 720ms; }
-.step-type:nth-child(4).is-visible::after,
-.step-type:nth-child(4).is-visible::before { animation-delay: 900ms; }
-.step-type:nth-child(5).is-visible::after,
-.step-type:nth-child(5).is-visible::before { animation-delay: 1080ms; }
-.step-type:nth-child(6).is-visible::after,
-.step-type:nth-child(6).is-visible::before { animation-delay: 1260ms; }
+.step-type:nth-child(2).is-visible::after { animation-delay: 310ms; }
+.step-type:nth-child(3).is-visible::after { animation-delay: 400ms; }
+.step-type:nth-child(4).is-visible::after { animation-delay: 490ms; }
+.step-type:nth-child(5).is-visible::after { animation-delay: 580ms; }
+.step-type:nth-child(6).is-visible::after { animation-delay: 670ms; }
 
 .step-type:hover {
   border-color: rgba(var(--step-rgb), 0.34);
@@ -2295,41 +2261,24 @@ footer {
   }
 }
 
-@keyframes step-edge-attention {
-  0% {
-    --oa-edge-angle: 0deg;
-    opacity: 0;
-  }
-  9% {
-    opacity: 0.95;
-  }
-  86% {
-    opacity: 0.95;
-  }
-  100% {
-    --oa-edge-angle: 360deg;
-    opacity: 0;
-  }
-}
-
-@keyframes step-edge-head {
+@keyframes step-edge-highlight {
   0% {
     offset-distance: 0%;
     opacity: 0;
-    scale: 0.35;
+    scale: 0.45;
   }
-  9% {
+  8% {
     opacity: 1;
     scale: 1;
   }
-  86% {
+  80% {
     opacity: 1;
     scale: 1;
   }
   100% {
     offset-distance: 100%;
     opacity: 0;
-    scale: 0.16;
+    scale: 0.2;
   }
 }
 
