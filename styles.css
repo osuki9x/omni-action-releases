@@ -548,8 +548,10 @@ img {
 }
 
 .tour-builder-frame {
+  --tour-builder-window-radius: clamp(3px, 0.42vw, 6px);
+
   overflow: hidden;
-  border-radius: clamp(5px, 1.25vw, 15px);
+  border-radius: var(--tour-builder-window-radius);
   background: #030304;
   box-shadow:
     0 0 24px -18px rgba(140, 31, 255, 0.7);
@@ -561,7 +563,7 @@ img {
   z-index: 1;
   box-sizing: border-box;
   pointer-events: none;
-  border: 1.5px solid var(--oa-stroke-normal);
+  border: 1px solid rgb(37, 37, 37);
   border-radius: inherit;
   content: "";
 }
