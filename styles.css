@@ -1977,7 +1977,7 @@ footer {
 
 .js .feature-panel .panel-copy {
   opacity: 0;
-  transform: translateX(-26px);
+  transform: translateY(18px);
   transition:
     opacity 680ms 150ms var(--oa-ease-standard),
     transform 900ms 150ms var(--oa-ease-fluid);
@@ -1985,7 +1985,7 @@ footer {
 
 .js .feature-panel > :last-child {
   opacity: 0;
-  clip-path: inset(0 9% 0 0 round 22px);
+  clip-path: inset(0 9% 0 0);
   transform: translateX(34px) scale(0.985);
   transition:
     opacity 760ms 210ms var(--oa-ease-standard),
@@ -1996,7 +1996,7 @@ footer {
 .js .feature-panel.is-visible .panel-copy,
 .js .feature-panel.is-visible > :last-child {
   opacity: 1;
-  clip-path: inset(0 round 22px);
+  clip-path: inset(0);
   transform: none;
 }
 

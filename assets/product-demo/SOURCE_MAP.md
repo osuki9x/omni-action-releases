@@ -16,9 +16,8 @@ changes do not turn the website into a second, drifting design system.
   `assets/product-demo/product-demo.css`
 
 The website keeps only local sample state, expand/collapse, duplicate/remove,
-test feedback, repeat-pill editing, and drag-to-reorder interactions. Its
-autonomous choreography pauses while the visitor is interacting. It does not
-persist or execute steps.
+test feedback, and repeat-pill editing. Its autonomous choreography pauses while
+the visitor is interacting. It does not persist, execute, or reorder steps.
 
 ## Radial Preview
 

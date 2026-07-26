@@ -153,10 +153,6 @@
     0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.oa-demo-step.is-dragging {
-  opacity: 0.25;
-}
-
 .oa-demo-step.is-entering {
   animation: oaDemoStepEnter 420ms var(--oa-ease-fluid) both;
 }
@@ -172,31 +168,7 @@
   min-height: 52px;
   align-items: center;
   gap: 9px;
-  padding: 8px 112px 8px 6px;
-}
-
-.oa-demo-step__handle {
-  display: flex;
-  width: 18px;
-  align-self: stretch;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  cursor: grab;
-  touch-action: none;
-}
-
-.oa-demo-step__handle::before {
-  width: 12px;
-  height: 16px;
-  border-radius: 4px;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.24) 0 1px,
-    transparent 1px 4px
-  );
-  content: "";
-  opacity: 0.58;
+  padding: 8px 112px 8px 10px;
 }
 
 .oa-demo-step__index {
@@ -439,7 +411,7 @@
   gap: 12px;
   align-items: center;
   overflow: hidden;
-  padding: 0 12px 0 76px;
+  padding: 0 12px 0 50px;
   border-top: 0 solid rgba(255, 255, 255, 0.034);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
   opacity: 0;
@@ -641,22 +613,6 @@
   animation: oaDemoButtonUse 1200ms var(--oa-ease-fluid) 1200ms both;
 }
 
-.oa-demo-drop-indicator {
-  position: relative;
-  height: 2px;
-  margin: -2px 8px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(140, 31, 255, 0.34) 15%,
-    rgba(210, 164, 255, 0.94) 50%,
-    rgba(140, 31, 255, 0.34) 85%,
-    transparent
-  );
-  filter: drop-shadow(0 0 5px rgba(140, 31, 255, 0.44));
-  animation: oaDemoDropOpen 240ms var(--oa-ease-fluid) both;
-}
-
 .oa-product-step-demo[data-compact] {
   height: auto;
   padding: 9px;
@@ -678,7 +634,6 @@
 }
 
 .oa-product-step-demo[data-compact] .oa-demo-step__actions,
-.oa-product-step-demo[data-compact] .oa-demo-step__handle,
 .oa-product-step-demo[data-compact] .oa-demo-step__body {
   display: none;
 }
@@ -856,13 +811,6 @@
   }
 }
 
-@keyframes oaDemoDropOpen {
-  from {
-    opacity: 0;
-    transform: scaleX(0.3);
-  }
-}
-
 @keyframes oaDemoControlUse {
   0%,
   100% {
@@ -917,7 +865,7 @@
 
   .oa-demo-step__body {
     grid-template-columns: 1fr;
-    padding-left: 54px;
+    padding-left: 38px;
   }
 
   .oa-demo-step-editor__shortcut {

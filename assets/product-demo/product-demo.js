@@ -48,6 +48,7 @@
       type: "axAction",
       summary: "Select Warp Stabilizer",
       detail: "Presses a captured interface control without moving the pointer.",
+      repeat: "× 2",
     },
     {
       id: "wait",
@@ -60,7 +61,6 @@
       type: "input",
       summary: "Enter 50 in Speed",
       detail: "Replaces the current value in the captured field.",
-      repeat: "× 2",
     },
     {
       id: "confirm",
@@ -79,21 +79,17 @@
     return button;
   }
 
-  function createStepRow(step, index, compact, callbacks) {
+  function createStepRow(step, index, callbacks) {
     const type = stepTypes[step.type] || stepTypes.command;
     const row = document.createElement("article");
     row.className = "oa-demo-step";
     row.dataset.stepId = step.id;
     row.dataset.stepType = step.type;
-    row.draggable = !compact;
+    row.draggable = false;
     row.style.setProperty("--step-rgb", type.color);
 
     const head = document.createElement("div");
     head.className = "oa-demo-step__head";
-
-    const handle = document.createElement("span");
-    handle.className = "oa-demo-step__handle";
-    handle.setAttribute("aria-hidden", "true");
 
     const number = document.createElement("span");
     number.className = "oa-demo-step__index";
@@ -158,7 +154,7 @@
     });
     actions.append(play, duplicate, remove);
 
-    head.append(handle, number, icon, copy, repeat, actions);
+    head.append(number, icon, copy, repeat, actions);
 
     const body = document.createElement("div");
     body.className = "oa-demo-step__body";
@@ -216,15 +212,16 @@
   function setupStepDemo(root) {
     const compact = root.hasAttribute("data-compact");
     let steps = sampleSteps.slice(0, compact ? 4 : sampleSteps.length).map((step) => ({ ...step }));
-    let draggedID = "";
-    let pointerDrag = null;
-    let openStepID = compact ? "" : "select-effect";
+    let openStepID = compact ? "" : "open-inspector";
     let repeatEditingID = "";
     let autoDemoTimer = 0;
-    let repeatDemoTimer = 0;
-    const autoDemoSteps = ["select-effect", "open-inspector"];
-    const dropIndicator = document.createElement("div");
-    dropIndicator.className = "oa-demo-drop-indicator";
+    let autoDemoPhase = 0;
+    const autoDemoPhases = [
+      { openStepID: "open-inspector", repeatEditingID: "", hold: 3200 },
+      { openStepID: "open-inspector", repeatEditingID: "select-effect", hold: 2200 },
+      { openStepID: "open-inspector", repeatEditingID: "", hold: 650 },
+      { openStepID: "select-effect", repeatEditingID: "", hold: 3600 },
+    ];
 
     root.setAttribute("role", "region");
     root.setAttribute(
@@ -236,7 +233,7 @@
     list.className = "oa-demo-step-list";
     root.appendChild(list);
 
-    function setOpenStep(stepID, { restart = false } = {}) {
+    function setOpenStep(stepID) {
       openStepID = stepID;
       list.querySelectorAll(".oa-demo-step").forEach((row) => {
         const isOpen = row.dataset.stepId === openStepID;
@@ -244,20 +241,20 @@
         row.classList.toggle("is-selected", isOpen);
         row.classList.toggle("is-demo-using", isOpen);
       });
-      if (restart) scheduleAutoDemo();
     }
 
-    function scheduleAutoDemo() {
+    function scheduleAutoDemo(delay) {
       window.clearTimeout(autoDemoTimer);
       if (compact || reducedMotion || root.matches(":hover") || root.contains(document.activeElement)) {
         return;
       }
       autoDemoTimer = window.setTimeout(() => {
-        const currentIndex = autoDemoSteps.indexOf(openStepID);
-        const nextID = autoDemoSteps[(currentIndex + 1 + autoDemoSteps.length) % autoDemoSteps.length];
-        setOpenStep(nextID);
-        scheduleAutoDemo();
-      }, 4600);
+        const phase = autoDemoPhases[autoDemoPhase % autoDemoPhases.length];
+        setOpenStep(phase.openStepID);
+        setRepeatEditing(phase.repeatEditingID);
+        autoDemoPhase = (autoDemoPhase + 1) % autoDemoPhases.length;
+        scheduleAutoDemo(phase.hold);
+      }, delay == null ? 0 : delay);
     }
 
     function setRepeatEditing(stepID) {
@@ -267,15 +264,12 @@
       });
     }
 
-    function scheduleRepeatDemo(delay = 2600) {
-      window.clearTimeout(repeatDemoTimer);
-      if (compact || reducedMotion || root.matches(":hover") || root.contains(document.activeElement)) {
-        return;
-      }
-      repeatDemoTimer = window.setTimeout(() => {
-        setRepeatEditing(repeatEditingID ? "" : "set-value");
-        scheduleRepeatDemo(repeatEditingID ? 2200 : 3900);
-      }, delay);
+    function restartAutoDemo() {
+      autoDemoPhase = 0;
+      setOpenStep(autoDemoPhases[0].openStepID);
+      setRepeatEditing(autoDemoPhases[0].repeatEditingID);
+      autoDemoPhase = 1;
+      scheduleAutoDemo(autoDemoPhases[0].hold);
     }
 
     root.addEventListener("pointermove", (event) => {
@@ -289,13 +283,15 @@
     function render({ animateID = "" } = {}) {
       list.innerHTML = "";
       steps.forEach((step, index) => {
-        const row = createStepRow(step, index, compact, {
+        const row = createStepRow(step, index, {
           toggle(stepID) {
-            setOpenStep(stepID, { restart: true });
+            window.clearTimeout(autoDemoTimer);
+            setOpenStep(stepID);
+            setRepeatEditing("");
           },
           toggleRepeat(stepID) {
+            window.clearTimeout(autoDemoTimer);
             setRepeatEditing(repeatEditingID === stepID ? "" : stepID);
-            scheduleRepeatDemo();
           },
           test(stepID) {
             const testedRow = list.querySelector(`[data-step-id="${CSS.escape(stepID)}"]`);
@@ -329,137 +325,27 @@
       setRepeatEditing(repeatEditingID);
     }
 
-    if (!compact) {
-      function positionDropIndicator(clientY) {
-        const candidates = [...list.querySelectorAll(".oa-demo-step:not(.is-dragging)")];
-        const before = candidates.find((row) => {
-          const rect = row.getBoundingClientRect();
-          return clientY < rect.top + rect.height / 2;
-        });
-        if (before) list.insertBefore(dropIndicator, before);
-        else list.appendChild(dropIndicator);
-      }
-
-      function applyDropOrder() {
-        if (dropIndicator.parentElement !== list || !draggedID) return;
-        const moved = steps.find((step) => step.id === draggedID);
-        const remaining = steps.filter((step) => step.id !== draggedID);
-        const children = [...list.children];
-        const indicatorPosition = children.indexOf(dropIndicator);
-        const insertIndex = children
-          .slice(0, indicatorPosition)
-          .filter(
-            (element) =>
-              element.classList.contains("oa-demo-step") &&
-              element.dataset.stepId !== draggedID,
-          ).length;
-        if (moved) remaining.splice(insertIndex, 0, moved);
-        steps = remaining;
-      }
-
-      root.addEventListener("pointerdown", (event) => {
-        const handle = event.target.closest(".oa-demo-step__handle");
-        const row = handle?.closest(".oa-demo-step");
-        if (!handle || !row || event.button !== 0) return;
-        event.preventDefault();
-        draggedID = row.dataset.stepId || "";
-        pointerDrag = {
-          pointerID: event.pointerId,
-          startX: event.clientX,
-          startY: event.clientY,
-          active: false,
-          handle,
-          row,
-        };
-        handle.setPointerCapture?.(event.pointerId);
-      });
-
-      root.addEventListener("pointermove", (event) => {
-        if (!pointerDrag || pointerDrag.pointerID !== event.pointerId) return;
-        event.preventDefault();
-        const dx = event.clientX - pointerDrag.startX;
-        const dy = event.clientY - pointerDrag.startY;
-        if (!pointerDrag.active && dx * dx + dy * dy < 25) return;
-        if (!pointerDrag.active) {
-          pointerDrag.active = true;
-          pointerDrag.row.classList.add("is-dragging");
-        }
-
-        positionDropIndicator(event.clientY);
-      });
-
-      function finishPointerDrag(event, cancelled) {
-        if (!pointerDrag || (event.pointerId != null && pointerDrag.pointerID !== event.pointerId)) return;
-        const active = pointerDrag.active;
-        pointerDrag.handle.releasePointerCapture?.(pointerDrag.pointerID);
-
-        if (active && !cancelled && dropIndicator.parentElement === list) {
-          applyDropOrder();
-        }
-
-        dropIndicator.remove();
-        draggedID = "";
-        pointerDrag = null;
-        render();
-      }
-
-      root.addEventListener("pointerup", (event) => finishPointerDrag(event, false));
-      root.addEventListener("pointercancel", (event) => finishPointerDrag(event, true));
-
-      root.addEventListener("dragstart", (event) => {
-        const row = event.target.closest(".oa-demo-step");
-        if (!row) return;
-        draggedID = row.dataset.stepId || "";
-        row.classList.add("is-dragging");
-        event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("text/plain", draggedID);
-      });
-
-      root.addEventListener("dragover", (event) => {
-        if (!draggedID) return;
-        event.preventDefault();
-        event.dataTransfer.dropEffect = "move";
-        positionDropIndicator(event.clientY);
-      });
-
-      root.addEventListener("drop", (event) => {
-        if (!draggedID) return;
-        event.preventDefault();
-        applyDropOrder();
-        dropIndicator.remove();
-        draggedID = "";
-        pointerDrag = null;
-        render();
-      });
-
-      root.addEventListener("dragend", () => {
-        dropIndicator.remove();
-        draggedID = "";
-        pointerDrag = null;
-        render();
-      });
-    }
-
     render();
     if (!compact) {
       root.addEventListener("pointerenter", () => {
         window.clearTimeout(autoDemoTimer);
-        window.clearTimeout(repeatDemoTimer);
       });
       root.addEventListener("pointerleave", () => {
-        scheduleAutoDemo();
-        scheduleRepeatDemo();
+        const activeElement = document.activeElement;
+        if (activeElement instanceof HTMLElement && root.contains(activeElement)) {
+          activeElement.blur();
+        }
+        restartAutoDemo();
       });
       root.addEventListener("focusin", () => {
         window.clearTimeout(autoDemoTimer);
-        window.clearTimeout(repeatDemoTimer);
       });
       root.addEventListener("focusout", () => window.setTimeout(() => {
-        scheduleAutoDemo();
-        scheduleRepeatDemo();
+        if (!root.contains(document.activeElement) && !root.matches(":hover")) {
+          restartAutoDemo();
+        }
       }, 0));
-      scheduleAutoDemo();
-      scheduleRepeatDemo();
+      restartAutoDemo();
     }
   }
 
@@ -617,7 +503,12 @@
       {},
     );
 
-    replay.addEventListener("click", () => instance.replay());
+    replay.addEventListener("click", () => {
+      instance.replay();
+      radialDemoPhase = 0;
+      replay.blur();
+      scheduleRadialDemo(1200);
+    });
 
     const radialDemoSequence = [
       { slotID: "main.speed", hold: 1500 },
@@ -675,7 +566,14 @@
       window.clearTimeout(radialDemoTimer);
       clearSyntheticHover();
     });
-    root.addEventListener("pointerleave", () => scheduleRadialDemo(900));
+    root.addEventListener("pointerleave", () => {
+      radialDemoPhase = 0;
+      scheduleRadialDemo(900);
+    });
+    root.addEventListener("focusin", () => window.clearTimeout(radialDemoTimer));
+    root.addEventListener("focusout", () => window.setTimeout(() => {
+      if (!root.contains(document.activeElement)) scheduleRadialDemo(900);
+    }, 0));
 
     if ("IntersectionObserver" in window && !reducedMotion) {
       const observer = new IntersectionObserver(
