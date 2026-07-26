@@ -1418,7 +1418,7 @@ img {
 
 .step-type {
   --step-rgb: 154, 83, 255;
-  --step-edge-delay: 920ms;
+  --step-edge-delay: 180ms;
   --step-edge-motion-easing: linear(
     0, 0.0023, 0.0056, 0.0098, 0.0151, 0.0218, 0.0304, 0.0418, 0.0574,
     0.079, 0.1096, 0.1522, 0.2052, 0.2592, 0.3038, 0.3364, 0.3593,
@@ -1487,11 +1487,11 @@ img {
     step-edge-visibility 1.24s var(--step-edge-delay) linear both;
 }
 
-.step-type:nth-child(2) { --step-edge-delay: 1020ms; }
-.step-type:nth-child(3) { --step-edge-delay: 1120ms; }
-.step-type:nth-child(4) { --step-edge-delay: 1220ms; }
-.step-type:nth-child(5) { --step-edge-delay: 1320ms; }
-.step-type:nth-child(6) { --step-edge-delay: 1420ms; }
+.step-type:nth-child(2) { --step-edge-delay: 280ms; }
+.step-type:nth-child(3) { --step-edge-delay: 380ms; }
+.step-type:nth-child(4) { --step-edge-delay: 480ms; }
+.step-type:nth-child(5) { --step-edge-delay: 580ms; }
+.step-type:nth-child(6) { --step-edge-delay: 680ms; }
 
 .step-type:hover {
   border-color: rgba(var(--step-rgb), 0.34);
@@ -2296,8 +2296,7 @@ footer {
 }
 
 @keyframes step-edge-visibility {
-  0%,
-  4% {
+  0% {
     opacity: 0;
   }
   18% {
