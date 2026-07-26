@@ -173,19 +173,40 @@ function setupTargetDemo(root) {
   let timer = 0;
   let inView = !("IntersectionObserver" in window);
   let currentPhase = phases[0];
+  let geometryReady = false;
+  let geometryReadyFrame = 0;
 
   function syncTargetGeometry(control) {
     if (!control || !targetApp) return;
-    const appRect = targetApp.getBoundingClientRect();
-    const controlRect = control.getBoundingClientRect();
-    const left = controlRect.left - appRect.left;
-    const top = controlRect.top - appRect.top;
+    let left = 0;
+    let top = 0;
+    let node = control;
+
+    while (node && node !== targetApp) {
+      left += node.offsetLeft;
+      top += node.offsetTop;
+      node = node.offsetParent;
+    }
+
+    if (node !== targetApp) return;
+
+    const controlStyle = window.getComputedStyle(control);
+    const width = Number.parseFloat(controlStyle.width);
+    const height = Number.parseFloat(controlStyle.height);
     root.style.setProperty("--target-outline-left", `${left}px`);
     root.style.setProperty("--target-outline-top", `${top}px`);
-    root.style.setProperty("--target-outline-width", `${controlRect.width}px`);
-    root.style.setProperty("--target-outline-height", `${controlRect.height}px`);
-    root.style.setProperty("--target-crosshair-x", `${left + controlRect.width / 2}px`);
-    root.style.setProperty("--target-crosshair-y", `${top + controlRect.height / 2}px`);
+    root.style.setProperty("--target-outline-width", `${width}px`);
+    root.style.setProperty("--target-outline-height", `${height}px`);
+    root.style.setProperty("--target-crosshair-x", `${left + width / 2}px`);
+    root.style.setProperty("--target-crosshair-y", `${top + height / 2}px`);
+
+    if (!geometryReady && !geometryReadyFrame) {
+      geometryReadyFrame = window.requestAnimationFrame(() => {
+        geometryReady = true;
+        geometryReadyFrame = 0;
+        root.classList.add("is-target-geometry-ready");
+      });
+    }
   }
 
   function applyPhase(phase) {

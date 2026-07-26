@@ -1025,11 +1025,21 @@ img {
     0 0 0 1px rgba(var(--target-accent-rgb), 0.16),
     0 0 22px -10px rgba(var(--target-accent-rgb), 0.9);
   animation: target-lock 3.2s ease-in-out infinite;
+  opacity: 0;
+  transition:
+    opacity 180ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.target-visual.is-target-geometry-ready .target-outline {
+  opacity: 1;
   transition:
     top 720ms var(--oa-ease-fluid),
     left 720ms var(--oa-ease-fluid),
     width 720ms var(--oa-ease-fluid),
     height 720ms var(--oa-ease-fluid),
+    opacity 180ms ease,
     border-color 260ms ease,
     box-shadow 260ms ease;
 }
@@ -1063,7 +1073,16 @@ img {
   height: 18px;
   border: 1px solid rgba(var(--target-accent-rgb), 0.85);
   border-radius: 50%;
+  opacity: 0;
   transform: translate(-50%, -50%);
+  transition:
+    opacity 180ms ease,
+    border-color 260ms ease,
+    transform 360ms var(--oa-ease-fluid);
+}
+
+.target-visual.is-target-geometry-ready .target-crosshair {
+  opacity: 1;
   transition:
     top 720ms var(--oa-ease-fluid),
     left 720ms var(--oa-ease-fluid),
