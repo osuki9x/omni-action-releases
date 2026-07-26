@@ -406,38 +406,52 @@ img {
 }
 
 .button--primary::before {
-  inset: -13px -17px;
+  inset: -12px -15px;
   background:
     radial-gradient(
-      ellipse at 50% 50%,
-      rgba(210, 164, 255, 0.56) 0%,
-      rgba(var(--oa-accent-rgb), 0.34) 34%,
-      rgba(var(--oa-accent-rgb), 0.13) 57%,
-      transparent 76%
+      ellipse 72% 76% at 50% 50%,
+      rgba(210, 164, 255, 0.42) 0%,
+      rgba(var(--oa-accent-rgb), 0.27) 32%,
+      rgba(var(--oa-accent-rgb), 0.12) 56%,
+      transparent 78%
     );
-  filter: blur(10px);
-  transform: scale3d(0.7, 0.58, 1);
+  filter: blur(9px);
+  transform: scale3d(0.96, 0.9, 1);
 }
 
 .button--primary::after {
-  inset: -5px -7px;
+  inset: -3px -5px;
   background:
     radial-gradient(
-      ellipse 70% 12px at 50% 0%,
-      rgba(255, 255, 255, 0.82),
-      rgba(210, 164, 255, 0.62) 20%,
-      rgba(var(--oa-accent-rgb), 0.3) 48%,
-      transparent 76%
+      ellipse 24% 4px at 50% 0%,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(255, 255, 255, 0.95) 12%,
+      rgba(210, 164, 255, 0.9) 30%,
+      rgba(var(--oa-accent-rgb), 0.58) 54%,
+      transparent 82%
     ),
     radial-gradient(
-      ellipse 70% 12px at 50% 100%,
-      rgba(255, 255, 255, 0.7),
-      rgba(210, 164, 255, 0.54) 20%,
-      rgba(var(--oa-accent-rgb), 0.27) 48%,
-      transparent 76%
+      ellipse 24% 4px at 50% 100%,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.88) 12%,
+      rgba(210, 164, 255, 0.82) 30%,
+      rgba(var(--oa-accent-rgb), 0.52) 54%,
+      transparent 82%
+    ),
+    radial-gradient(
+      ellipse 66% 13px at 50% 0%,
+      rgba(var(--oa-accent-rgb), 0.42),
+      rgba(var(--oa-accent-rgb), 0.18) 40%,
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 66% 13px at 50% 100%,
+      rgba(var(--oa-accent-rgb), 0.38),
+      rgba(var(--oa-accent-rgb), 0.16) 40%,
+      transparent 75%
     );
-  filter: blur(2.5px);
-  transform: scale3d(0.76, 0.84, 1);
+  filter: blur(0.55px);
+  transform: scale3d(0.94, 0.97, 1);
 }
 
 .button--primary:hover {
@@ -2382,59 +2396,59 @@ footer {
 
 @keyframes primary-cta-aura-bloom {
   0%,
-  8%,
+  9.5%,
   25%,
   100% {
     opacity: 0;
-    filter: blur(11px);
-    transform: scale3d(0.7, 0.58, 1);
-  }
-
-  11.5% {
-    opacity: 0.3;
     filter: blur(10px);
-    transform: scale3d(0.86, 0.76, 1);
+    transform: scale3d(0.96, 0.9, 1);
   }
 
-  15.5% {
-    opacity: 0.88;
-    filter: blur(8px);
-    transform: scale3d(1.035, 1.06, 1);
+  12.5% {
+    opacity: 0.22;
+    filter: blur(9.5px);
+    transform: scale3d(0.98, 0.95, 1);
   }
 
-  20% {
-    opacity: 0.36;
-    filter: blur(12px);
-    transform: scale3d(1.12, 1.23, 1);
+  15.2% {
+    opacity: 0.92;
+    filter: blur(7.5px);
+    transform: scale3d(1, 1.015, 1);
+  }
+
+  19.5% {
+    opacity: 0.5;
+    filter: blur(10.5px);
+    transform: scale3d(1.025, 1.07, 1);
   }
 }
 
 @keyframes primary-cta-edge-bloom {
   0%,
-  9.5%,
-  23%,
+  10%,
+  22.5%,
   100% {
     opacity: 0;
-    filter: blur(3px);
-    transform: scale3d(0.76, 0.84, 1);
+    filter: blur(0.8px);
+    transform: scale3d(0.94, 0.97, 1);
   }
 
-  12% {
-    opacity: 0.42;
-    filter: blur(2.5px);
-    transform: scale3d(0.88, 0.94, 1);
+  12.4% {
+    opacity: 0.34;
+    filter: blur(0.65px);
+    transform: scale3d(0.975, 0.99, 1);
   }
 
-  15.5% {
-    opacity: 0.98;
-    filter: blur(1.8px);
-    transform: scale3d(1.01, 1.025, 1);
+  14.8% {
+    opacity: 1;
+    filter: blur(0.35px);
+    transform: scale3d(1, 1, 1);
   }
 
-  19.5% {
-    opacity: 0.2;
-    filter: blur(3.5px);
-    transform: scale3d(1.08, 1.13, 1);
+  18.5% {
+    opacity: 0.56;
+    filter: blur(0.75px);
+    transform: scale3d(1.012, 1.025, 1);
   }
 }
 
