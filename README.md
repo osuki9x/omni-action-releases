@@ -4,8 +4,8 @@
 
 Omni Action turns commands, keys, mouse actions, text, timing, and captured
 interface targets into readable visual macros. Trigger them with a shortcut or
-from a customizable radial menu. Version 3.1 includes the current public
-integration for DaVinci Resolve on macOS.
+from a customizable radial menu. Version 3.2 includes official integrations for
+DaVinci Resolve Studio and Adobe Premiere Pro on macOS.
 
 Visit the official homepage for the product tour, installation options, and
 requirements:

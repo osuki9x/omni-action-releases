@@ -1698,6 +1698,11 @@ img {
   font-size: 13px !important;
 }
 
+.integration-cards {
+  display: grid;
+  gap: 20px;
+}
+
 .integration-card {
   overflow: hidden;
   border: 1px solid rgba(255, 122, 24, 0.22);
@@ -1708,6 +1713,17 @@ img {
   box-shadow:
     0 28px 58px rgba(0, 0, 0, 0.32),
     0 0 48px -32px rgba(255, 122, 24, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.integration-card--premiere {
+  border-color: rgba(153, 153, 255, 0.26);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(153, 153, 255, 0.11), transparent 36%),
+    rgba(13, 12, 16, 0.9);
+  box-shadow:
+    0 28px 58px rgba(0, 0, 0, 0.32),
+    0 0 48px -32px rgba(153, 153, 255, 0.68),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 

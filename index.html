@@ -7,13 +7,13 @@
     <meta name="application-name" content="Omni Action" />
     <meta
       name="description"
-      content="Build repeatable interface workflows as readable macros, then run them from a shortcut or radial menu. Omni Action 3.1 supports DaVinci Resolve on macOS."
+      content="Build repeatable interface workflows as readable macros, then run them from a shortcut or radial menu. Omni Action 3.2 supports DaVinci Resolve Studio and Adobe Premiere Pro on macOS."
     />
     <link rel="canonical" href="https://osuki9x.github.io/omni-action-releases/" />
     <meta property="og:title" content="Omni Action — Build once. Run in a moment." />
     <meta
       property="og:description"
-      content="A visual automation workspace for macOS. Version 3.1 includes the DaVinci Resolve integration."
+      content="A visual automation workspace for macOS. Version 3.2 includes official DaVinci Resolve Studio and Adobe Premiere Pro integrations."
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Omni Action" />
@@ -23,12 +23,12 @@
     <meta name="twitter:title" content="Omni Action — Build once. Run in a moment." />
     <meta
       name="twitter:description"
-      content="Visual automation for macOS. Available now with DaVinci Resolve support."
+      content="Visual automation for macOS. Available now for DaVinci Resolve Studio and Adobe Premiere Pro."
     />
     <title>Omni Action — Visual automation for macOS</title>
     <link rel="icon" href="assets/omni-action-mark.svg" type="image/svg+xml" />
     <script>document.documentElement.classList.add("js");</script>
-    <link rel="stylesheet" href="styles.css?v=13" />
+    <link rel="stylesheet" href="styles.css?v=14" />
     <link rel="stylesheet" href="assets/product-demo/radial-preview-runtime.css" />
     <link rel="stylesheet" href="assets/product-demo/product-demo.css?v=11" />
     <script src="script.js?v=4" defer></script>
@@ -42,7 +42,7 @@
         "name": "Omni Action",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "macOS",
-        "description": "A visual automation workspace for repeatable interface workflows. Version 3.1 includes the DaVinci Resolve integration.",
+        "description": "A visual automation workspace for repeatable interface workflows. Version 3.2 includes official DaVinci Resolve Studio and Adobe Premiere Pro integrations.",
         "url": "https://osuki9x.github.io/omni-action-releases/",
         "downloadUrl": "https://github.com/osuki9x/omni-action-releases/releases/latest"
       }
@@ -86,7 +86,7 @@
           <div class="hero-copy reveal">
             <div class="eyebrow">
               <span class="eyebrow-dot"></span>
-              <span data-version-label>Omni Action 3.1</span>
+              <span data-version-label>Omni Action 3.2</span>
               <span class="eyebrow-divider"></span>
               Visual automation for macOS
             </div>
@@ -110,7 +110,7 @@
               </a>
             </div>
             <div class="hero-notes" aria-label="Product highlights">
-              <span><i class="check">✓</i> Available now for DaVinci Resolve</span>
+              <span><i class="check">✓</i> DaVinci Resolve &amp; Premiere Pro</span>
               <span><i class="check">✓</i> Signed updates</span>
               <span><i class="check">✓</i> Your data stays local</span>
             </div>
@@ -437,31 +437,54 @@
               app-specific targeting logic.
             </p>
             <p class="integration-note">
-              Version 3.1 ships with one public integration. The product is
-              structured to add more without changing how a macro is built.
+              Version 3.2 ships with official integrations for DaVinci Resolve
+              Studio (21.1 &amp; 21.2) and Adobe Premiere Pro (26.5 &amp; 27.0).
             </p>
           </div>
 
-          <article class="integration-card reveal">
-            <div class="integration-card__top">
-              <span class="integration-symbol">
-                <img src="assets/app-icons/davinci-resolve.png" alt="" />
-              </span>
-              <span>
-                <small>SUPPORTED TODAY</small>
-                <h3>DaVinci Resolve</h3>
-              </span>
-              <i>Available</i>
-            </div>
-            <ul>
-              <li><span>✓</span> Menu commands and shortcuts</li>
-              <li><span>✓</span> Interface-aware target capture</li>
-              <li><span>✓</span> Built-in macros and radial presets</li>
-            </ul>
-            <div class="integration-card__footer">
-              Current integration in <span data-version-short>v3.1</span>
-            </div>
-          </article>
+          <div class="integration-cards">
+            <article class="integration-card reveal">
+              <div class="integration-card__top">
+                <span class="integration-symbol">
+                  <img src="assets/app-icons/davinci-resolve.png" alt="" />
+                </span>
+                <span>
+                  <small>SUPPORTED TODAY · 21.1 &amp; 21.2</small>
+                  <h3>DaVinci Resolve Studio</h3>
+                </span>
+                <i>Available</i>
+              </div>
+              <ul>
+                <li><span>✓</span> Edit, Fairlight, Fusion &amp; Color effects</li>
+                <li><span>✓</span> Inspector controls, keyframes &amp; Speed Change</li>
+                <li><span>✓</span> Multi-clip Stabilize with single-step Undo</li>
+              </ul>
+              <div class="integration-card__footer">
+                Included in <span data-version-short>v3.2</span>
+              </div>
+            </article>
+
+            <article class="integration-card integration-card--premiere reveal">
+              <div class="integration-card__top">
+                <span class="integration-symbol">
+                  <img src="assets/app-icons/premiere-pro.png" alt="" />
+                </span>
+                <span>
+                  <small>SUPPORTED TODAY · 26.5 &amp; 27.0</small>
+                  <h3>Adobe Premiere Pro</h3>
+                </span>
+                <i>Available</i>
+              </div>
+              <ul>
+                <li><span>✓</span> Video &amp; audio effects, transitions &amp; speed controls</li>
+                <li><span>✓</span> Clip properties, volume keyframes &amp; built-in macros</li>
+                <li><span>✓</span> Automatic background companion &amp; live shortcut sync</li>
+              </ul>
+              <div class="integration-card__footer">
+                Included in <span data-version-short>v3.2</span>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -538,7 +561,7 @@
           <div class="requirements reveal">
             <div>
               <span class="requirement-icon requirement-icon--mac"></span>
-              <span><strong>macOS</strong><small>Apple silicon or Intel</small></span>
+              <span><strong>macOS</strong><small>Apple silicon</small></span>
             </div>
             <div>
               <span class="requirement-icon requirement-icon--app">
@@ -550,7 +573,7 @@
               <span class="requirement-icon requirement-icon--app">
                 <img src="assets/app-icons/davinci-resolve.png" alt="" />
               </span>
-              <span><strong>DaVinci Resolve</strong><small>Current supported integration</small></span>
+              <span><strong>Resolve &amp; Premiere</strong><small>Official app integrations</small></span>
             </div>
             <div>
               <span class="requirement-icon requirement-icon--green">✓</span>
@@ -593,17 +616,18 @@
             <details class="reveal">
               <summary>What can Omni Action automate today?</summary>
               <p>
-                Version 3.1 supports DaVinci Resolve. A macro can combine app
+                Version 3.2 supports DaVinci Resolve Studio (21.1 &amp; 21.2) and
+                Adobe Premiere Pro (26.5 &amp; 27.0). A macro can combine app
                 commands, keys, text, timing, mouse actions, repeat logic, and
                 captured interface targets.
               </p>
             </details>
             <details class="reveal">
-              <summary>Is Omni Action only for DaVinci Resolve?</summary>
+              <summary>Which editing apps are supported?</summary>
               <p>
-                DaVinci Resolve is the current public integration, not the limit
-                of the product. Omni Action uses a shared Builder and an
-                integration layer so support for another app can be added later.
+                Omni Action 3.2 includes official integrations for DaVinci
+                Resolve Studio and Adobe Premiere Pro, plus custom app profiles
+                using a shared Builder and integration layer.
               </p>
             </details>
             <details class="reveal">
@@ -644,7 +668,7 @@
         <div class="shell final-shell reveal">
           <div class="final-logo"><img src="assets/omni-action-mark.svg" alt="" /></div>
           <h2>Make the next action<br />the easy one.</h2>
-          <p>Build your first macro with the DaVinci Resolve integration.</p>
+          <p>Build your first macro for DaVinci Resolve Studio or Adobe Premiere Pro.</p>
           <a class="button button--primary" href="#install">
             Get Omni Action
             <span class="button-icon" aria-hidden="true">↓</span>
